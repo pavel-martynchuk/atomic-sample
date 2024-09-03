@@ -9,6 +9,7 @@ public class CharacterController : MonoBehaviour
 {
     [SerializeField] private AtomicObject _character;
     [SerializeField] private Button _dashButton;
+    [SerializeField] private Button _accelerateButton;
     
     private InputController _inputController;
     private DashController _dashController;

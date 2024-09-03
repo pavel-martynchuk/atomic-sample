@@ -1,5 +1,7 @@
 ﻿using Atomic.Objects;
 using Game.Scripts._01_Infrastructure.Services.Coroutines;
+using Game.Scripts._03_Gameplay.Character;
+using Game.Scripts.StaticData;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -8,15 +10,19 @@ namespace Game.Scripts.Character
     public sealed class Character : AtomicObject, ICoroutineRunner
     {
         [SerializeField] private bool _composeOnAwake = true;
+        [SerializeField, Required] private CharacterStaticData _staticDataConfig;
+        
+        [SerializeField]
+        [BoxGroup("Data")]
+        private Character_Data _data;
         
         [Section]
         [SerializeField]
         [BoxGroup("Core")]
         private Character_Core _core;
-        
-        [Section]
+
         [SerializeField]
-        [BoxGroup("View"), GUIColor(0.8f, 1f, 0.99f)]
+        [BoxGroup("View")]
         private Character_View _view;
 
         
@@ -24,7 +30,8 @@ namespace Game.Scripts.Character
         {
             base.Compose();
             
-            _core.Compose(this);
+            _data.Compose(_staticDataConfig);
+            _core.Compose(this, _data);
             _view.Compose(_core);
         }
 
@@ -59,6 +66,7 @@ namespace Game.Scripts.Character
 
         private void OnDestroy()
         {
+            _data.Dispose();
             _core.Dispose();
             _view.Dispose();
         }

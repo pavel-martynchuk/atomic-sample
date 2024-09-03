@@ -24,9 +24,16 @@ namespace GameEngine
 
         public void FixedUpdate()
         {
-            if (_isMoveEnable.Value)
+            if (_isMoveEnable.Value && (_moveDirection.Value.magnitude > 0f))
             {
-                Vector3 moveOffset = _moveDirection.Value * (_speed.Value * Time.fixedDeltaTime);
+                Vector3 moveDirection = _moveDirection.Value.normalized;
+                Vector3 rigidbodyDirection = _rigidbody.transform.forward.normalized;
+
+                float directionDot = Vector3.Dot(rigidbodyDirection, moveDirection);
+                float adjustedSpeedMultiplier = Mathf.Clamp01((directionDot + 1) / 2);
+                float adjustedSpeed = _speed.Value * adjustedSpeedMultiplier;
+
+                Vector3 moveOffset = moveDirection * (adjustedSpeed * Time.fixedDeltaTime);
                 _rigidbody.MovePosition(_rigidbody.position + moveOffset);
             }        
         }

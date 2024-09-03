@@ -62,8 +62,8 @@ namespace GameEngine
             while (elapsedTime < _duration.Value)
             {
                 float t = elapsedTime / _duration.Value;
-                _rigidbody.MovePosition(Vector3.Lerp(startPosition, targetPosition, t));
-
+                float easeT = Mathf.SmoothStep(0f, 1f, t);
+                _rigidbody.MovePosition(Vector3.Lerp(startPosition, targetPosition, easeT));
                 elapsedTime += Time.fixedDeltaTime;
                 yield return new WaitForFixedUpdate();
             }

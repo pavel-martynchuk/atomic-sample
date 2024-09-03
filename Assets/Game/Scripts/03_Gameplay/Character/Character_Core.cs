@@ -2,7 +2,7 @@
 using Atomic.Elements;
 using Atomic.Objects;
 using Game.Scripts._01_Infrastructure.Services.Coroutines;
-using Game.Scripts.StaticData;
+using Game.Scripts._03_Gameplay.Character;
 using GameEngine;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -14,16 +14,13 @@ namespace Game.Scripts.Character
     public sealed class Character_Core : IDisposable
     {
         [SerializeField, Required] private Rigidbody _rigidbody;
-        [SerializeField, Required] private CharacterStaticData _staticDataConfig;
-
-        [SerializeField]
-        [PropertySpace(SpaceBefore = 50, SpaceAfter = 50)]
-        private AtomicVariable<bool> _isRagdoll = new(false);
-
+        [SerializeField, Required] private Animator _animator;
+        [SerializeField, Required] private Rigidbody[] _rigidbodies;
+        
         [Section]
         [BoxGroup("Health Component"), HideLabel]
         public HealthComponent HealthComponent;
-
+        
         [Section]
         [BoxGroup("Movement Component"), HideLabel]
         public PhysicalMovementComponent MovementComponent;
@@ -36,23 +33,21 @@ namespace Game.Scripts.Character
         [BoxGroup("Dash action"), HideLabel]
         public DashAction DashAction;
         
+        [BoxGroup("Ragdoll"), HideLabel]
+        public Ragdoll Ragdoll;
+        
         private UpdateMechanics _stateController;
         
-        public void Compose(ICoroutineRunner coroutineRunner)
+        public void Compose(ICoroutineRunner coroutineRunner, Character_Data data)
         {
-            HealthComponent.Compose(_staticDataConfig.Health);
-
-            AtomicVariable<float> speed = new(_staticDataConfig.Speed);
-            AtomicValue<float> dashDistance = new(_staticDataConfig.DashDistance);
-            AtomicValue<float> dashDuration = new(_staticDataConfig.DashDuration);
+            HealthComponent.Compose(data.Health);
+            MovementComponent.Compose(_rigidbody, data.MovementSpeed);
+            RotationComponent.Compose(_rigidbody, data.RotationSpeed);
+            DashAction.Compose(coroutineRunner, _rigidbody, data.DashDistance, data.DashDuration);
+            Ragdoll.Compose(_animator, _rigidbodies);
             
-            MovementComponent.Compose(_rigidbody, speed);
-            RotationComponent.Compose(_rigidbody, speed);
-            DashAction.Compose(coroutineRunner, _rigidbody, dashDistance, dashDuration);
-
             _stateController = new UpdateMechanics(StateResolve);
         }
-        
 
         public void OnEnable()
         {
@@ -77,7 +72,7 @@ namespace Game.Scripts.Character
 
         public void Dispose()
         {
-            _isRagdoll?.Dispose();
+            Ragdoll?.Dispose();
             HealthComponent?.Dispose();
             MovementComponent?.Dispose();
             DashAction?.Dispose();
@@ -86,8 +81,7 @@ namespace Game.Scripts.Character
         private void StateResolve()
         {
             bool isAlive = HealthComponent.IsAlive.Value;
-            bool isRagdoll = _isRagdoll.Value;
-                
+            bool isRagdoll = Ragdoll.IsActive.Value;
             
             DashAction.DashEnable.Value = isAlive && !isRagdoll && !DashAction.InProcess.Value;
             MovementComponent.MoveEnable.Value = isAlive && !isRagdoll;

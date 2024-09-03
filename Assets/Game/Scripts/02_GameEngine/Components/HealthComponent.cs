@@ -10,11 +10,12 @@ namespace GameEngine
     [Is(ObjectType.Damageable)]
     public sealed class HealthComponent : IDisposable
     {
+        public IAtomicValue<bool> IsAlive => _isAlive;
+        
         [Get(ObjectAPI.TakeDamageAction)]
         [InlineProperty] public AtomicEvent<int> TakeDamageEvent;
         [InlineProperty] public AtomicEvent<int> GetHealthEvent;
         [InlineProperty] public AtomicEvent DeathEvent;
-        public IAtomicValue<bool> IsAlive => _isAlive;
 
         [Header("Data")]
         [SerializeField, InlineProperty, ReadOnly] private AtomicValue<int> _maxHealth;
@@ -26,10 +27,10 @@ namespace GameEngine
         private GetHealthMechanics _getHealthMechanics;
         private DeathMechanics _deathMechanics;
         
-        public void Compose(int maxHealth)
+        public void Compose(AtomicVariable<int> health)
         {
-            _maxHealth = new AtomicValue<int>(maxHealth);
-            _currentHealth = new AtomicVariable<int>(maxHealth);
+            _maxHealth = new AtomicValue<int>(health.Value);
+            _currentHealth = health;
             
             _isAlive.Compose(() => _currentHealth.Value > 0);
             

@@ -9,7 +9,9 @@ namespace Game.Scripts.StaticData
         public int Health;
         
         [Header("Movement")]
-        public float Speed;
+        public float MovementSpeed;
+        public float RotationSpeed;
+        
         public float DashDistance;
         public float DashDuration;
     }
