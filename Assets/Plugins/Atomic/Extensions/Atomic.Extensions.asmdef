@@ -1,0 +1,17 @@
+{
+    "name": "Atomic.Extensions",
+    "rootNamespace": "",
+    "references": [
+        "GUID:36c42d4600b8d3d44afb558db35078c9",
+        "GUID:157e6da034d7efb4cafdd3c1341af185"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
