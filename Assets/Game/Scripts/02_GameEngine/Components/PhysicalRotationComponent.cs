@@ -7,7 +7,7 @@ using UnityEngine;
 namespace GameEngine
 {
     [Serializable]
-    public class PhysicalRotationComponent
+    public sealed class PhysicalRotationComponent
     {
         [InlineProperty, ReadOnly]
         public AtomicVariable<bool> RotateEnable = new(true);

@@ -1,5 +1,4 @@
 ﻿using System;
-using Atomic.Elements;
 using Atomic.Objects;
 using Game.Scripts._01_Infrastructure.Services.Coroutines;
 using Game.Scripts._03_Gameplay.Character;
@@ -28,9 +27,15 @@ namespace Game.Scripts.Character
         [Section]
         [BoxGroup("Rotation Component"), HideLabel]
         public PhysicalRotationComponent RotationComponent;
+        
+        [Section]
+        [Get(ObjectAPI.AccelerateMechanics)]
+        [BoxGroup("Accelerate"), HideLabel] 
+        public AccelerateMechanics AccelerateMechanics;
 
-        [Get(ObjectAPI.DashAction), Section]
-        [BoxGroup("Dash action"), HideLabel]
+        [Section]
+        [Get(ObjectAPI.DashAction)]
+        [BoxGroup("Dash action"), HideLabel] 
         public DashAction DashAction;
         
         [BoxGroup("Ragdoll"), HideLabel]
@@ -43,9 +48,10 @@ namespace Game.Scripts.Character
             HealthComponent.Compose(data.Health);
             MovementComponent.Compose(_rigidbody, data.MovementSpeed);
             RotationComponent.Compose(_rigidbody, data.RotationSpeed);
+            AccelerateMechanics.Compose(data.MovementSpeed, data.AcceleratedSpeed);
             DashAction.Compose(coroutineRunner, _rigidbody, data.DashDistance, data.DashDuration);
             Ragdoll.Compose(_animator, _rigidbodies);
-            
+
             _stateController = new UpdateMechanics(StateResolve);
         }
 

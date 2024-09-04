@@ -1,6 +1,7 @@
 using System;
 using Atomic.Elements;
 using Game.Scripts.StaticData;
+using GameEngine.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -11,40 +12,32 @@ namespace Game.Scripts._03_Gameplay.Character
     public sealed class Character_Data : IDisposable
     {
         [Header("Reactive")]
-        [SerializeField, ReadOnly, InlineProperty] private AtomicVariable<int> _health;
-        [SerializeField, ReadOnly, InlineProperty] private AtomicVariable<float> _movementSpeed;
-        [SerializeField, ReadOnly, InlineProperty] private AtomicVariable<float> _rotationSpeed;
+        [ReadOnly, InlineProperty] public AtomicVariable<int> Health;
+        [InlineProperty] public Stat MovementSpeed;
+        [ReadOnly, InlineProperty] public AtomicVariable<float> RotationSpeed;
         
         [Space(20f)]
         [Header("Const")]
-        [SerializeField, ReadOnly, InlineProperty] private AtomicValue<float> _dashDistance;
-        [SerializeField, ReadOnly, InlineProperty] private AtomicValue<float> _dashDuration;
-
-        #region Property
-        
-        public AtomicVariable<int> Health => _health;
-        public AtomicVariable<float> MovementSpeed => _movementSpeed;
-        public AtomicVariable<float> RotationSpeed => _rotationSpeed;
-        public AtomicValue<float> DashDistance => _dashDistance;
-        public AtomicValue<float> DashDuration => _dashDuration;
-        
-        #endregion
+        [ReadOnly, InlineProperty] public AtomicValue<float> AcceleratedSpeed;
+        [ReadOnly, InlineProperty] public AtomicValue<float> DashDistance;
+        [ReadOnly, InlineProperty] public AtomicValue<float> DashDuration;
         
         public void Compose(CharacterStaticData staticDataConfig)
         {
-            _health = new AtomicVariable<int>(staticDataConfig.Health);
-            _movementSpeed = new AtomicVariable<float>(staticDataConfig.MovementSpeed);
-            _rotationSpeed = new AtomicVariable<float>(staticDataConfig.RotationSpeed);
+            Health = new AtomicVariable<int>(staticDataConfig.Health);
+            MovementSpeed = new Stat(staticDataConfig.MovementSpeed);
+            RotationSpeed = new AtomicVariable<float>(staticDataConfig.RotationSpeed);
 
-            _dashDistance = new AtomicValue<float>(staticDataConfig.DashDistance);
-            _dashDuration = new AtomicValue<float>(staticDataConfig.DashDuration);
+            AcceleratedSpeed = new AtomicValue<float>(staticDataConfig.AcceleratedSpeed);
+            DashDistance = new AtomicValue<float>(staticDataConfig.DashDistance);
+            DashDuration = new AtomicValue<float>(staticDataConfig.DashDuration);
         }
-
+        
         public void Dispose()
         {
-            _health?.Dispose();
-            _movementSpeed?.Dispose();
-            _rotationSpeed?.Dispose();
+            Health?.Dispose();
+            MovementSpeed?.Dispose();
+            RotationSpeed?.Dispose();
         }
     }
 }

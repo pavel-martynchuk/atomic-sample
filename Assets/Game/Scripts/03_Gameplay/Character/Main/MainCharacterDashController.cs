@@ -2,14 +2,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GameEngine
+namespace Game.Scripts.Gameplay.Character.Main
 {
-    public sealed class DashController
+    public sealed class MainCharacterDashController
     {
         private readonly IAtomicAction _dashAction;
         private readonly Button _dashButton;
 
-        public DashController(IAtomicAction dashAction, Button dashButton)
+        public MainCharacterDashController(IAtomicAction dashAction, Button dashButton)
         {
             _dashAction = dashAction;
             _dashButton = dashButton;

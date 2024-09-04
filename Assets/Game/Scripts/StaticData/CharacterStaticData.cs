@@ -10,6 +10,7 @@ namespace Game.Scripts.StaticData
         
         [Header("Movement")]
         public float MovementSpeed;
+        public float AcceleratedSpeed;
         public float RotationSpeed;
         
         public float DashDistance;

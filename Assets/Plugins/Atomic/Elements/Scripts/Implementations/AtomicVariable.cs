@@ -1,36 +1,35 @@
 using System;
 using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace Atomic.Elements
 {
     [Serializable]
     public class AtomicVariable<T> : IAtomicVariable<T>, IAtomicObservable<T>, IDisposable
     {
-        public T Value
+        [ShowInInspector, HideLabel]
+        public virtual T Value
         {
             get { return this.value; }
             set
             {
                 this.value = value;
-                this.onChanged?.Invoke(value);
+                this.OnChanged?.Invoke(value);
             }
         }
 
         public void Subscribe(Action<T> listener)
         {
-            this.onChanged += listener;
+            this.OnChanged += listener;
         }
 
         public void Unsubscribe(Action<T> listener)
         {
-            this.onChanged -= listener;
+            this.OnChanged -= listener;
         }
 
-        private Action<T> onChanged;
+        protected Action<T> OnChanged;
 
         [OnValueChanged("OnValueChanged")]
-        [SerializeField, HideLabel]
         private T value;
 
         public AtomicVariable()
@@ -46,12 +45,12 @@ namespace Atomic.Elements
 #if UNITY_EDITOR
         private void OnValueChanged(T value)
         {
-            this.onChanged?.Invoke(value);
+            this.OnChanged?.Invoke(value);
         }
 #endif
         public void Dispose()
         {
-            AtomicUtils.Dispose(ref this.onChanged);
+            AtomicUtils.Dispose(ref this.OnChanged);
         }
     }
 }
