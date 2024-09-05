@@ -11,10 +11,15 @@ namespace Game.Scripts._03_Gameplay.Character
     [Serializable]
     public sealed class Character_Data : IDisposable
     {
-        [Header("Reactive")]
-        [ReadOnly, InlineProperty] public AtomicVariable<int> Health;
-        [InlineProperty] public Stat MovementSpeed;
-        [ReadOnly, InlineProperty] public AtomicVariable<float> RotationSpeed;
+        [ReadOnly, InlineProperty]
+        public AtomicVariable<int> Health;
+        
+        [PropertySpace(SpaceBefore = 24, SpaceAfter = 24)]
+        [InlineProperty]
+        public Stat MovementSpeed;
+        
+        [ReadOnly, InlineProperty]
+        public AtomicVariable<float> RotationSpeed;
         
         [Space(20f)]
         [Header("Const")]

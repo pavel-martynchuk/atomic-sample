@@ -8,15 +8,16 @@ using UnityEngine.UI;
 
 namespace Game.Scripts.Gameplay.Character.Main
 {
-    public class MainCharacterController : MonoBehaviour
+    // ReSharper disable once InconsistentNaming
+    public class InteractionController_MainChar : MonoBehaviour
     {
         [SerializeField] private AtomicObject _character;
         [SerializeField] private Button _dashButton;
         [SerializeField] private HudButton  _accelerateButton;
     
         private InputController _inputController;
-        private MainCharacterDashController _dashController;
-        private MainCharacterAccelerateController _accelerateController;
+        private DashController_MainChar _dashController;
+        private AccelerationController_MainChar _accelerateController;
     
         private void Start()
         {
@@ -26,9 +27,9 @@ namespace Game.Scripts.Gameplay.Character.Main
             AccelerateMechanics accelerateMechanics = _character.Get<AccelerateMechanics>(ObjectAPI.AccelerateMechanics);
         
             _inputController = new InputController(new []{moveDirection, rotateDirection});
-            _dashController = new MainCharacterDashController(dashAction, _dashButton);
-            _dashController = new MainCharacterDashController(dashAction, _dashButton);
-            _accelerateController = new MainCharacterAccelerateController(accelerateMechanics, _accelerateButton);
+            _dashController = new DashController_MainChar(dashAction, _dashButton);
+            _dashController = new DashController_MainChar(dashAction, _dashButton);
+            _accelerateController = new AccelerationController_MainChar(accelerateMechanics, _accelerateButton);
 
             Subscribe();
         }

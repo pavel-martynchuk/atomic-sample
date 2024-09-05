@@ -2,89 +2,97 @@ using System;
 using System.Collections.Generic;
 using Atomic.Elements;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace GameEngine.Data
 {
     [Serializable]
     public class Stat : AtomicVariable<float>
     {
+        [LabelText("Base Value"), PropertyOrder(0)]
+        [ShowInInspector, ReadOnly]
+        private float BaseValue => base.Value;
+        
+        [LabelText("Result Value"), PropertyOrder(0)]
+        [ShowInInspector, ReadOnly]
         public override float Value
-        {
-            get => FinalSpeed;
-            set
-            {
-                base.Value = value;
-                InvokeOnChanged();
-            }
-        }
-        
-        [ShowInInspector] private readonly List<float> _additiveModifiers = new();
-        [ShowInInspector] private readonly List<float> _multiplicativeModifiers = new();
-        
-        public Stat(float movementSpeed)
-        {
-            Value = movementSpeed;
-        }
-
-        public float FinalSpeed
         {
             get
             {
-                float baseSpeed = Value;
+                float finalValue = base.Value;
 
-                foreach (var mod in _additiveModifiers)
+                foreach (float mod in additiveModifiers)
                 {
-                    baseSpeed += mod;
+                    finalValue += mod;
                 }
 
-                foreach (var multiplier in _multiplicativeModifiers)
+                foreach (float mod in multiplicativeModifiers)
                 {
-                    baseSpeed *= multiplier;
+                    finalValue *= mod;
                 }
 
-                return baseSpeed;
+                return finalValue;
+            }
+            set
+            {
+                base.Value = value;
+                OnChanged?.Invoke(Value);
+            }
+        }
+        
+        [Space(24)]
+        [SerializeField, ReadOnly, PropertyOrder(1)]
+        private List<float> additiveModifiers = new();
+
+        [SerializeField, ReadOnly, PropertyOrder(1)]
+        private List<float> multiplicativeModifiers = new();
+
+        public Stat(float value)
+        {
+            base.Value = value;
+        }
+
+        public void AddAdditiveModifier(float value)
+        {
+            if (value != 0f)
+            {
+                additiveModifiers.Add(value);
+                OnChanged?.Invoke(Value);
             }
         }
 
-        [Button]
-        public void AddAdditiveModifier(float modifier)
+        public void RemoveAdditiveModifier(float value)
         {
-            _additiveModifiers.Add(modifier);
-            InvokeOnChanged();
+            if (additiveModifiers.Contains(value))
+            {
+                additiveModifiers.Remove(value);
+                OnChanged?.Invoke(Value);
+            }
         }
 
-        [Button]
-        public void RemoveAdditiveModifier(float modifier)
+        public void AddMultiplicativeModifier(float value)
         {
-            _additiveModifiers.Remove(modifier);
-            InvokeOnChanged();
+            if (!Mathf.Approximately(value, 1f))
+            {
+                multiplicativeModifiers.Add(value);
+                OnChanged?.Invoke(Value);
+            }
         }
 
-        [Button]
-        public void AddMultiplicativeModifier(float multiplier)
+        public void RemoveMultiplicativeModifier(float value)
         {
-            _multiplicativeModifiers.Add(multiplier);
-            InvokeOnChanged();
+            if (multiplicativeModifiers.Contains(value))
+            {
+                multiplicativeModifiers.Remove(value);
+                OnChanged?.Invoke(Value);
+            }
         }
 
-        [Button]
-        public void RemoveMultiplicativeModifier(float multiplier)
+        public void ResetModifiers()
         {
-            _multiplicativeModifiers.Remove(multiplier);
-            InvokeOnChanged();
-        }
-
-        [Button]
-        public void ClearModifiers()
-        {
-            _additiveModifiers.Clear();
-            _multiplicativeModifiers.Clear();
-            InvokeOnChanged();
-        }
-
-        private void InvokeOnChanged()
-        {
-            OnChanged?.Invoke(FinalSpeed);
+            additiveModifiers.Clear();
+            multiplicativeModifiers.Clear();
+            OnChanged?.Invoke(Value);
         }
     }
 }

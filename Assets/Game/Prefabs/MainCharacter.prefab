@@ -145,15 +145,14 @@ MonoBehaviour:
   _composeOnAwake: 1
   _staticDataConfig: {fileID: 11400000, guid: 534645b15894b9240934a6c16515deff, type: 2}
   _data:
-    _health:
+    MovementSpeed:
+      additiveModifiers: []
+      multiplicativeModifiers: []
+    AcceleratedSpeed:
       value: 0
-    _movementSpeed:
+    DashDistance:
       value: 0
-    _rotationSpeed:
-      value: 0
-    _dashDistance:
-      value: 0
-    _dashDuration:
+    DashDuration:
       value: 0
   _core:
     _rigidbody: {fileID: 8240723906006236950}
@@ -174,38 +173,56 @@ MonoBehaviour:
     - {fileID: 175681953430238873}
     - {fileID: 110953674496721527}
     - {fileID: 4679715046573675716}
-    _isRagdoll:
-      value: 0
     HealthComponent:
       _maxHealth:
         value: 0
-      _currentHealth:
-        value: 0
-    MovementComponent:
-      MoveEnable:
-        value: 1
-      _moveDirection:
-        value: {x: 0, y: 0, z: 0}
+    MovementComponent: {}
+    RotationComponent: {}
+    AccelerateMechanics:
       _speed:
+        additiveModifiers: []
+        multiplicativeModifiers: []
+      _changedSpeed:
         value: 0
-    RotationComponent:
-      RotateEnable:
-        value: 1
-      _moveDirection:
-        value: {x: 0, y: 0, z: 0}
-      _speed:
-        value: 0
+      _baseSpeed: 0
     DashAction:
-      DashEnable:
-        value: 1
-      InProcess:
-        value: 0
       _distance:
         value: 0
       _duration:
         value: 0
   _view:
     _animator: {fileID: 3422417604441460727}
+--- !u!1 &4592408636643658903
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7910099497037075048}
+  m_Layer: 6
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7910099497037075048
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4592408636643658903}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.25, y: 1.125, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4373177222635248319}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5289644979865103937
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,6 +254,7 @@ Transform:
   m_Children:
   - {fileID: 8763708527299204493}
   - {fileID: 3096871486580293664}
+  - {fileID: 7910099497037075048}
   m_Father: {fileID: 2333635328746263330}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5416897587721181372

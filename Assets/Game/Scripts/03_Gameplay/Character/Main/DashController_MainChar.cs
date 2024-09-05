@@ -4,12 +4,13 @@ using UnityEngine.UI;
 
 namespace Game.Scripts.Gameplay.Character.Main
 {
-    public sealed class MainCharacterDashController
+    // ReSharper disable once InconsistentNaming
+    public sealed class DashController_MainChar
     {
         private readonly IAtomicAction _dashAction;
         private readonly Button _dashButton;
 
-        public MainCharacterDashController(IAtomicAction dashAction, Button dashButton)
+        public DashController_MainChar(IAtomicAction dashAction, Button dashButton)
         {
             _dashAction = dashAction;
             _dashButton = dashButton;

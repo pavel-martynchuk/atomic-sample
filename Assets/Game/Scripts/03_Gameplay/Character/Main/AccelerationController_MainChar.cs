@@ -3,12 +3,13 @@ using GameEngine;
 
 namespace Game.Scripts.Gameplay.Character.Main
 {
-    public sealed class MainCharacterAccelerateController
+    // ReSharper disable once InconsistentNaming
+    public sealed class AccelerationController_MainChar
     {
         private readonly AccelerateMechanics _accelerateMechanics;
         private readonly HudButton _accelerateButton;
 
-        public MainCharacterAccelerateController(AccelerateMechanics accelerateMechanics, HudButton accelerateButton)
+        public AccelerationController_MainChar(AccelerateMechanics accelerateMechanics, HudButton accelerateButton)
         {
             _accelerateButton = accelerateButton;
             _accelerateMechanics = accelerateMechanics;
