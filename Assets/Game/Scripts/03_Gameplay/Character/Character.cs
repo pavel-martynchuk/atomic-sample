@@ -1,6 +1,6 @@
 ﻿using Atomic.Objects;
-using Game.Scripts._01_Infrastructure.Services.Coroutines;
-using Game.Scripts._03_Gameplay.Character;
+using Game.Scripts.Gameplay.Character;
+using Game.Scripts.Infrastructure.Services.Coroutines;
 using Game.Scripts.StaticData;
 using Sirenix.OdinInspector;
 using UnityEngine;

@@ -1,11 +1,10 @@
-﻿using System;
-using Atomic.Elements;
+﻿using Atomic.Elements;
 using Atomic.Objects;
 using GameEngine;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Game.Scripts._03_Gameplay
+namespace Game.Scripts.Gameplay
 {
     public class Trap : MonoBehaviour
     {

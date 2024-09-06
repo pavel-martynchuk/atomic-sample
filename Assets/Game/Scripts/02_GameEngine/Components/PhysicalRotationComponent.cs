@@ -27,7 +27,7 @@ namespace GameEngine
             _rotationMechanics = new PhysicalRotationMechanics(RotateEnable, _moveDirection, _speed, rigidbody);
         }
 
-        public void FixedUpdate()
+        public void OnFixedUpdate()
         {
             _rotationMechanics.FixedUpdate();
         }

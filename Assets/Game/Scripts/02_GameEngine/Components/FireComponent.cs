@@ -1,6 +1,7 @@
 using System;
 using Atomic.Elements;
 using Atomic.Objects;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GameEngine
@@ -12,28 +13,31 @@ namespace GameEngine
         
         [Get(ObjectAPI.FireAction)]
         public FireAction FireAction;
-        public AtomicEvent FireEvent;
-
-        public Transform FirePoint;
-        public AtomicObject BulletPrefab;
-        public AtomicVariable<int> Charges = new(10);
-
-        private AndExpression _fireCondition;
-        public SpawnBulletAction SpawnBulletAction;
         
-        public void Compose()
+        public AtomicEvent FireEvent;
+        
+        [SerializeField, ReadOnly] private Transform _firePoint;
+        [SerializeField, ReadOnly] private AtomicObject _bulletPrefab;
+        [SerializeField, ReadOnly] private AndExpression _fireCondition;
+        [SerializeField, ReadOnly] private SpawnBulletAction _spawnBulletAction;
+        [SerializeField, ReadOnly] private AtomicVariable<int> _charges = new(10);
+        
+        public void Compose(Transform firePoint , AtomicObject bulletPrefab)
         {
+            _firePoint = firePoint;
+            _bulletPrefab = bulletPrefab;
+
             _fireCondition.Append(FireEnable);
-            _fireCondition.Append(Charges.AsFunction(it => it.Value > 0));
+            _fireCondition.Append(_charges.AsFunction(it => it.Value > 0));
             
-            FireAction.Compose(SpawnBulletAction, Charges, _fireCondition, FireEvent);
-            SpawnBulletAction.Compose(FirePoint, BulletPrefab);
+            _spawnBulletAction.Compose(_firePoint, _bulletPrefab);
+            FireAction.Compose(_spawnBulletAction, _charges, _fireCondition);
         }
 
         public void Dispose()
         {
             FireEvent?.Dispose();
-            Charges?.Dispose();
+            _charges?.Dispose();
         }
     }
 }

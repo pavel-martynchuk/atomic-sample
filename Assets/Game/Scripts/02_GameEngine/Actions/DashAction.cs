@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using Atomic.Elements;
+using Game.Scripts.Infrastructure.Services.Coroutines;
 using UnityEngine;
-using Game.Scripts._01_Infrastructure.Services.Coroutines;
 using Sirenix.OdinInspector;
 
 namespace GameEngine

@@ -18,18 +18,21 @@ namespace Game.Scripts.Gameplay.Character.Main
         private InputController _inputController;
         private DashController_MainChar _dashController;
         private AccelerationController_MainChar _accelerateController;
+        private FireController_MainChar _fireController;
     
         private void Start()
         {
             IAtomicVariable<Vector3> moveDirection = _character.GetVariable<Vector3>(ObjectAPI.MoveDirection);
             IAtomicVariable<Vector3> rotateDirection = _character.GetVariable<Vector3>(ObjectAPI.RotateDirection);
             IAtomicAction dashAction = _character.GetAction(ObjectAPI.DashAction);
+            IAtomicAction fireAction = _character.GetAction(ObjectAPI.FireAction);
             AccelerateMechanics accelerateMechanics = _character.Get<AccelerateMechanics>(ObjectAPI.AccelerateMechanics);
         
             _inputController = new InputController(new []{moveDirection, rotateDirection});
             _dashController = new DashController_MainChar(dashAction, _dashButton);
             _dashController = new DashController_MainChar(dashAction, _dashButton);
             _accelerateController = new AccelerationController_MainChar(accelerateMechanics, _accelerateButton);
+            _fireController = new FireController_MainChar(fireAction);
 
             Subscribe();
         }
@@ -38,6 +41,7 @@ namespace Game.Scripts.Gameplay.Character.Main
         {
             _inputController.Update();
             _dashController.Update();
+            _fireController.Update();
         }
     
         private void OnDestroy()

@@ -35,6 +35,7 @@ namespace GameEngine
             );
             
             IAtomicVariable<Vector3> bulletDirection = bullet.GetVariable<Vector3>(ObjectAPI.MoveDirection);
+            
             if (bulletDirection != null)
             {
                 bulletDirection.Value = _firePoint.forward;

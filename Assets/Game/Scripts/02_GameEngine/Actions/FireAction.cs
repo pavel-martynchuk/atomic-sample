@@ -10,19 +10,16 @@ namespace GameEngine
         private IAtomicVariable<int> _charges;
         private IAtomicValue<bool> _shootCondition;
         private IAtomicAction _shootAction;
-        private IAtomicEvent _shootEvent;
 
         public void Compose(
             IAtomicAction shootAction,
             IAtomicVariable<int> charges,
-            IAtomicValue<bool> shootCondition,
-            IAtomicEvent shootEvent
+            IAtomicValue<bool> shootCondition
         )
         {
             _shootAction = shootAction;
             _charges = charges;
             _shootCondition = shootCondition;
-            _shootEvent = shootEvent;
         }
 
         [Button]
@@ -33,7 +30,6 @@ namespace GameEngine
 
             _shootAction.Invoke();
             _charges.Value--;
-            _shootEvent.Invoke();
         }
     }
 }

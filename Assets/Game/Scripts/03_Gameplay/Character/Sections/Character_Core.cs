@@ -1,12 +1,11 @@
 ﻿using System;
 using Atomic.Objects;
-using Game.Scripts._01_Infrastructure.Services.Coroutines;
-using Game.Scripts._03_Gameplay.Character;
+using Game.Scripts.Infrastructure.Services.Coroutines;
 using GameEngine;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Game.Scripts.Character
+namespace Game.Scripts.Gameplay.Character
 {
     // ReSharper disable once InconsistentNaming
     [Serializable]
@@ -14,6 +13,9 @@ namespace Game.Scripts.Character
     {
         [SerializeField, Required] private Rigidbody _rigidbody;
         [SerializeField, Required] private Animator _animator;
+        [SerializeField, Required] private Transform _firePoint;
+        [SerializeField, Required] private AtomicObject _bullet;
+        
         [SerializeField, Required] private Rigidbody[] _rigidbodies;
         
         [Section]
@@ -27,6 +29,10 @@ namespace Game.Scripts.Character
         [Section]
         [BoxGroup("Rotation Component"), HideLabel]
         public PhysicalRotationComponent RotationComponent;
+        
+        [Section]
+        [BoxGroup("Fire Component"), HideLabel]
+        public FireComponent FireComponent;
         
         [Section]
         [Get(ObjectAPI.AccelerateMechanics)]
@@ -50,6 +56,9 @@ namespace Game.Scripts.Character
             RotationComponent.Compose(_rigidbody, data.RotationSpeed);
             AccelerateMechanics.Compose(data.MovementSpeed, data.AcceleratedSpeed);
             DashAction.Compose(coroutineRunner, _rigidbody, data.DashDistance, data.DashDuration);
+            
+            FireComponent.Compose(_firePoint, _bullet);
+            
             Ragdoll.Compose(_animator, _rigidbodies);
 
             _stateController = new UpdateMechanics(StateResolve);
@@ -68,7 +77,7 @@ namespace Game.Scripts.Character
         public void FixedUpdate()
         {
             MovementComponent.FixedUpdate(); 
-            RotationComponent.FixedUpdate(); 
+            RotationComponent.OnFixedUpdate(); 
         }
 
         public void OnDisable()

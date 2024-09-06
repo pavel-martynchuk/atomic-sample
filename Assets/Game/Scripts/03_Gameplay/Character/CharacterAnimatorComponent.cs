@@ -1,4 +1,4 @@
-﻿using Game.Scripts.Character;
+﻿using Game.Scripts.Gameplay.Character;
 using GameEngine;
 using UnityEngine;
 

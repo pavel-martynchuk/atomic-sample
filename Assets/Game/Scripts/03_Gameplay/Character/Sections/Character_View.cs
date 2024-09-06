@@ -4,7 +4,7 @@ using GameEngine;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Game.Scripts.Character
+namespace Game.Scripts.Gameplay.Character
 {
     // ReSharper disable once InconsistentNaming
     [Serializable]
