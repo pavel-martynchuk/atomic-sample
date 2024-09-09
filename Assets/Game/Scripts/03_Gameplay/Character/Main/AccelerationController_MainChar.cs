@@ -23,8 +23,8 @@ namespace Game.Scripts.Gameplay.Character.Main
         
         public void OnDisable()
         {
-            _accelerateButton.PointerDown += _accelerateMechanics.ChangeSpeed;
-            _accelerateButton.PointerUp += _accelerateMechanics.RevertSpeed;
+            _accelerateButton.PointerDown -= _accelerateMechanics.ChangeSpeed;
+            _accelerateButton.PointerUp -= _accelerateMechanics.RevertSpeed;
         }
     }
 }

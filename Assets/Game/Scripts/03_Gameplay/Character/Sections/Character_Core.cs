@@ -20,36 +20,37 @@ namespace Game.Scripts.Gameplay.Character
         [SerializeField, Required] private Rigidbody[] _rigidbodies;
         
         [Section]
-        [BoxGroup("Health Component"), HideLabel]
+        [BoxGroup("Health Component")]
         public HealthComponent HealthComponent;
         
         [Section]
-        [BoxGroup("Movement Component"), HideLabel]
+        [BoxGroup("Movement Component")]
         public PhysicalMovementComponent MovementComponent;
         
         [Section]
-        [BoxGroup("Rotation Component"), HideLabel]
+        [BoxGroup("Rotation Component")]
         public PhysicalRotationComponent RotationComponent;
         
         [Section]
-        [BoxGroup("Fire Component"), HideLabel]
+        [BoxGroup("Fire Component")]
         public FireComponent FireComponent;
         
         [Section]
         [Get(ObjectAPI.AccelerateMechanics)]
-        [BoxGroup("Accelerate"), HideLabel] 
+        [BoxGroup("Accelerate")] 
         public AccelerateMechanics AccelerateMechanics;
 
         [Section]
         [Get(ObjectAPI.DashAction)]
-        [BoxGroup("Dash action"), HideLabel] 
+        [BoxGroup("Dash action")] 
         public DashAction DashAction;
         
         [Section]
-        [BoxGroup("Pickup"), HideLabel] 
-        public PickupMechanics_MainChar PickupMechanics;
+        [Get(ObjectAPI.PickupMechanics)]
+        [BoxGroup("Pickup")] 
+        public PickupMechanics PickupMechanics;
         
-        [BoxGroup("Ragdoll"), HideLabel]
+        [BoxGroup("Ragdoll")]
         public Ragdoll Ragdoll;
         
         private UpdateMechanics _stateController;
@@ -74,10 +75,12 @@ namespace Game.Scripts.Gameplay.Character
         {
             HealthComponent.OnEnable();
             PickupMechanics.OnEnable();
+            PickupMechanics.OnEnable();
         }
 
         public void Update()
         {
+            PickupMechanics.OnUpdate();
             _stateController.OnUpdate(Time.deltaTime);
         }
 
@@ -99,6 +102,12 @@ namespace Game.Scripts.Gameplay.Character
             HealthComponent?.Dispose();
             MovementComponent?.Dispose();
             DashAction?.Dispose();
+            PickupMechanics?.Dispose();
+        }
+
+        public void OnTriggerEnter()
+        {
+            
         }
 
         private void StateResolve()

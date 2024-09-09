@@ -10,6 +10,7 @@ namespace GameEngine
         public const string DashAction = nameof(DashAction);
         public const string FireAction = nameof(FireAction);
         public const string AccelerateMechanics = nameof(AccelerateMechanics);
+        public const string PickupMechanics = nameof(PickupMechanics);
         public const string TakeDamageAction = nameof(TakeDamageAction);
     }
 }

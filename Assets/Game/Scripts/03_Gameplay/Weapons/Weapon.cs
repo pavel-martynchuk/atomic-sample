@@ -1,11 +1,8 @@
-using Atomic.Objects;
-using GameEngine;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Game.Scripts.Gameplay.Weapons
 {
-    [Is(ObjectType.Weapon)]
     public class Weapon : PickupObject
     {
         [SerializeField, Required]
@@ -14,7 +11,12 @@ namespace Game.Scripts.Gameplay.Weapons
         protected override void Compose(float pickupDuration)
         {
             base.Compose(pickupDuration);
-            
+        }
+
+        public override void Use()
+        {
+            base.Use();
+            Debug.LogError("Use - Weapon");
         }
     }
 }

@@ -3,7 +3,7 @@ using Game.Scripts.GameEngine.UI;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Game.Scripts.Gameplay
+namespace GameEngine.AtomicObjects
 {
     public abstract class PickupObject : AtomicObject
     {
@@ -48,7 +48,6 @@ namespace Game.Scripts.Gameplay
         
         public virtual void Use()
         {
-            Debug.LogError("Use");
             PickupProgress.Hide();
             TriggerCollider.enabled = false;
         }
