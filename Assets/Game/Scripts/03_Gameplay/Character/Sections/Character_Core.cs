@@ -1,5 +1,6 @@
 ﻿using System;
 using Atomic.Objects;
+using Game.Scripts.Gameplay.Character.Main;
 using Game.Scripts.Infrastructure.Services.Coroutines;
 using GameEngine;
 using Sirenix.OdinInspector;
@@ -44,6 +45,10 @@ namespace Game.Scripts.Gameplay.Character
         [BoxGroup("Dash action"), HideLabel] 
         public DashAction DashAction;
         
+        [Section]
+        [BoxGroup("Pickup"), HideLabel] 
+        public PickupMechanics_MainChar PickupMechanics;
+        
         [BoxGroup("Ragdoll"), HideLabel]
         public Ragdoll Ragdoll;
         
@@ -56,6 +61,7 @@ namespace Game.Scripts.Gameplay.Character
             RotationComponent.Compose(_rigidbody, data.RotationSpeed);
             AccelerateMechanics.Compose(data.MovementSpeed, data.AcceleratedSpeed);
             DashAction.Compose(coroutineRunner, _rigidbody, data.DashDistance, data.DashDuration);
+            PickupMechanics.Compose();
             
             FireComponent.Compose(_firePoint, _bullet);
             
@@ -67,6 +73,7 @@ namespace Game.Scripts.Gameplay.Character
         public void OnEnable()
         {
             HealthComponent.OnEnable();
+            PickupMechanics.OnEnable();
         }
 
         public void Update()
@@ -83,6 +90,7 @@ namespace Game.Scripts.Gameplay.Character
         public void OnDisable()
         {
             HealthComponent.OnDisable();
+            PickupMechanics.OnDisable();
         }
 
         public void Dispose()

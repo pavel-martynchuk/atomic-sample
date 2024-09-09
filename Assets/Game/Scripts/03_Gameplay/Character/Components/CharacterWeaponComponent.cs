@@ -1,9 +1,11 @@
 using Atomic.Elements;
 using Game.Scripts.Gameplay.Weapons;
+using Sirenix.OdinInspector;
 
 namespace Game.Scripts.Gameplay.Character
 {
-    public class CharacterWeaponComponent
+    [Searchable]
+    public sealed class CharacterWeaponComponent
     {
         public IAtomicVariable<Weapon> CurrentWeapon;
         

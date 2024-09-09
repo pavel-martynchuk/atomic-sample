@@ -1,6 +1,6 @@
 namespace Game.Scripts.Gameplay.Weapons.SniperRifle
 {
-    public class SniperRifleWeapon
+    public class SniperRifleWeapon : Weapon
     {
         
     }

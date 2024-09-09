@@ -1,6 +1,6 @@
 namespace Game.Scripts.Gameplay.Weapons.Revolver
 {
-    public class RevolverWeapon
+    public class RevolverWeapon : Weapon
     {
         
     }

@@ -197,6 +197,8 @@ MonoBehaviour:
         value: 0
       _duration:
         value: 0
+    PickupMechanics:
+      _triggerObserver: {fileID: 2415983912610112460}
   _view:
     _animator: {fileID: 3422417604441460727}
 --- !u!1 &4592408636643658903
@@ -326,6 +328,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3096871486580293664}
   - component: {fileID: 2763054048347628555}
+  - component: {fileID: 2415983912610112460}
   m_Layer: 6
   m_Name: Collider
   m_TagString: Untagged
@@ -371,6 +374,21 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &2415983912610112460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5416897587721181372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e98a5b132b844a8b02ff0932cb9f952, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _triggerLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &7070757630299412841
 GameObject:
   m_ObjectHideFlags: 0
