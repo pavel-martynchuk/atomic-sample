@@ -1,5 +1,4 @@
-﻿using System;
-using Atomic.Objects;
+﻿using Atomic.Objects;
 using Game.Scripts.Gameplay.Character;
 using Game.Scripts.Infrastructure.Services.Coroutines;
 using Game.Scripts.StaticData;
@@ -50,23 +49,23 @@ namespace Game.Scripts.Character
 
         private void Update()
         {
-            _core.Update();
+            _core.OnUpdate();
             _view.Update();
         }
 
         private void FixedUpdate()
         {
-            _core.FixedUpdate();
+            _core.OnFixedUpdate();
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            _core.PickupMechanics.OnTriggerEnter(other);
+            _core.OnTriggerEnter(other);
         }
         
         private void OnTriggerExit(Collider other)
         {
-            _core.PickupMechanics.OnTriggerExit(other);
+            _core.OnTriggerExit(other);
         }
 
         private void OnDisable()

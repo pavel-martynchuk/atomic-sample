@@ -178,6 +178,7 @@ MonoBehaviour:
     _firePoint: {fileID: 7910099497037075048}
     _bullet: {fileID: 5686013926564916551, guid: 421fc6961d604ba4e90b3ad08fec08b6,
       type: 3}
+    _weaponParent: {fileID: 4548722096540362963}
     _rigidbodies:
     - {fileID: 5551619267319951146}
     - {fileID: 715267707932390040}
@@ -215,7 +216,10 @@ MonoBehaviour:
       _duration:
         value: 0
     PickupMechanics:
-      _triggerObserver: {fileID: 4011499730781874990}
+      _duration: 0
+      _progress: 0
+    CharacterWeaponComponent:
+      WeaponChangeAction: {}
   _view:
     _animator: {fileID: 3422417604441460727}
 --- !u!1 &4592408636643658903

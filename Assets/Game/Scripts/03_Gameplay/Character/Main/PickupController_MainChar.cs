@@ -9,9 +9,7 @@ namespace Game.Scripts.Gameplay.Character.Main
         private readonly PickupMechanics _pickupMechanics;
         private readonly HudButton _useButton;
 
-        public PickupController_MainChar(
-            PickupMechanics pickupMechanics,
-            HudButton useButton)
+        public PickupController_MainChar(PickupMechanics pickupMechanics, HudButton useButton)
         {
             _pickupMechanics = pickupMechanics;
             _useButton = useButton;
@@ -24,36 +22,39 @@ namespace Game.Scripts.Gameplay.Character.Main
 
         public void OnEnable()
         {
-            _pickupMechanics..Callback.Subscribe(OnPickupComplete);
-            _pickupMechanics.TriggerEnterAction.;
-            _pickupMechanics.TriggerExit.Subscribe( OnTriggerExit);
-            _useButton.PointerDown += _pickupMechanics.StartProcessing;
-            _useButton.PointerUp += _pickupMechanics.EndProcessing;
+            _pickupMechanics.TriggerEnterEvent.Subscribe(OnTriggerEnterWithPickup);
+            _pickupMechanics.TriggerExitEvent.Subscribe(OnTriggerExitWithPickup);
+            
+            _useButton.PointerDown += _pickupMechanics.StartPickingUp;
+            _useButton.PointerUp += _pickupMechanics.StopPickingUp;
+            
+            _pickupMechanics.PickingUpCompleteEvent.Subscribe(OnPickingUpComplete);
         }
         
         public void OnDisable()
         {
-            _pickupAction.Callback.Unsubscribe(OnPickupComplete);
-            _pickupMechanics.TriggerEnter.Unsubscribe(OnTriggerEnter);
-            _pickupMechanics.TriggerExit.Unsubscribe( OnTriggerExit);
-            _useButton.PointerDown -= _pickupMechanics.StartProcessing;
-            _useButton.PointerUp -= _pickupMechanics.EndProcessing;
+            _pickupMechanics.TriggerEnterEvent.Unsubscribe(OnTriggerEnterWithPickup);
+            _pickupMechanics.TriggerExitEvent.Unsubscribe(OnTriggerExitWithPickup);
+            
+            _useButton.PointerDown -= _pickupMechanics.StartPickingUp;
+            _useButton.PointerUp -= _pickupMechanics.StopPickingUp;
+            
+            _pickupMechanics.PickingUpCompleteEvent.Unsubscribe(OnPickingUpComplete);
         }
 
-        private void OnTriggerEnter()
+        private void OnTriggerEnterWithPickup()
         {
             _useButton.Show();
         }
 
-        private void OnTriggerExit()
+        private void OnTriggerExitWithPickup()
         {
-            ResetUseButton();
+            _useButton.Hide();
         }
 
-        private void OnPickupComplete()
+        private void OnPickingUpComplete()
         {
-            _useButton.ResetButtonPress();
-            _useButton.Hide();
+            ResetUseButton();
         }
 
         private void ResetUseButton()

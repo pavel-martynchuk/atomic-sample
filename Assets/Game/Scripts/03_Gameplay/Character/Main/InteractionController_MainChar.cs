@@ -31,7 +31,7 @@ namespace Game.Scripts.Gameplay.Character.Main
             IAtomicAction fireAction = _character.GetAction(ObjectAPI.FireAction);
             
             AccelerateMechanics accelerateMechanics = _character.Get<AccelerateMechanics>(ObjectAPI.AccelerateMechanics);
-            PickupMechanics_MainChar pickupMechanics = _character.Get<PickupMechanics_MainChar>(ObjectAPI.PickupMechanics);
+            PickupMechanics pickupMechanics = _character.Get<PickupMechanics>(ObjectAPI.PickupMechanics);
         
             _inputController = new InputController(new []{moveDirection, rotateDirection});
             _dashController = new DashController_MainChar(dashAction, _dashButton);

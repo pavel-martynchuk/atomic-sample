@@ -1,6 +1,5 @@
 ﻿using System;
 using Atomic.Objects;
-using Game.Scripts.Gameplay.Character.Main;
 using Game.Scripts.Infrastructure.Services.Coroutines;
 using GameEngine;
 using Sirenix.OdinInspector;
@@ -16,6 +15,7 @@ namespace Game.Scripts.Gameplay.Character
         [SerializeField, Required] private Animator _animator;
         [SerializeField, Required] private Transform _firePoint;
         [SerializeField, Required] private AtomicObject _bullet;
+        [SerializeField, Required] private Transform _weaponParent;
         
         [SerializeField, Required] private Rigidbody[] _rigidbodies;
         
@@ -53,6 +53,9 @@ namespace Game.Scripts.Gameplay.Character
         [BoxGroup("Ragdoll")]
         public Ragdoll Ragdoll;
         
+        [BoxGroup("CharacterWeaponComponent")]
+        public CharacterWeaponComponent CharacterWeaponComponent;
+        
         private UpdateMechanics _stateController;
         
         public void Compose(ICoroutineRunner coroutineRunner, Character_Data data)
@@ -63,10 +66,9 @@ namespace Game.Scripts.Gameplay.Character
             AccelerateMechanics.Compose(data.MovementSpeed, data.AcceleratedSpeed);
             DashAction.Compose(coroutineRunner, _rigidbody, data.DashDistance, data.DashDuration);
             PickupMechanics.Compose();
-            
             FireComponent.Compose(_firePoint, _bullet);
-            
             Ragdoll.Compose(_animator, _rigidbodies);
+            CharacterWeaponComponent.Compose(_rigidbody.transform, _weaponParent);
 
             _stateController = new UpdateMechanics(StateResolve);
         }
@@ -74,17 +76,16 @@ namespace Game.Scripts.Gameplay.Character
         public void OnEnable()
         {
             HealthComponent.OnEnable();
-            PickupMechanics.OnEnable();
-            PickupMechanics.OnEnable();
+            CharacterWeaponComponent.OnEnable();
         }
 
-        public void Update()
+        public void OnUpdate()
         {
             PickupMechanics.OnUpdate();
             _stateController.OnUpdate(Time.deltaTime);
         }
 
-        public void FixedUpdate()
+        public void OnFixedUpdate()
         {
             MovementComponent.FixedUpdate(); 
             RotationComponent.OnFixedUpdate(); 
@@ -93,22 +94,14 @@ namespace Game.Scripts.Gameplay.Character
         public void OnDisable()
         {
             HealthComponent.OnDisable();
-            PickupMechanics.OnDisable();
+            CharacterWeaponComponent.OnDisable();
         }
 
-        public void Dispose()
-        {
-            Ragdoll?.Dispose();
-            HealthComponent?.Dispose();
-            MovementComponent?.Dispose();
-            DashAction?.Dispose();
-            PickupMechanics?.Dispose();
-        }
+        public void OnTriggerEnter(Collider collider) => 
+            PickupMechanics.OnTriggerEnter(collider);
 
-        public void OnTriggerEnter()
-        {
-            
-        }
+        public void OnTriggerExit(Collider collider) => 
+            PickupMechanics.OnTriggerExit(collider);
 
         private void StateResolve()
         {
@@ -118,6 +111,17 @@ namespace Game.Scripts.Gameplay.Character
             DashAction.DashEnable.Value = isAlive && !isRagdoll && !DashAction.InProcess.Value;
             MovementComponent.MoveEnable.Value = isAlive && !isRagdoll;
             RotationComponent.RotateEnable.Value = isAlive && !isRagdoll && !DashAction.InProcess.Value;
+        }
+
+        public void Dispose()
+        {
+            HealthComponent?.Dispose();
+            MovementComponent?.Dispose();
+            FireComponent?.Dispose();
+            DashAction?.Dispose();
+            PickupMechanics?.Dispose();
+            Ragdoll?.Dispose();
+            CharacterWeaponComponent?.Dispose();
         }
     }
 }

@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace Game.Scripts.Gameplay.Weapons
+namespace GameEngine.Data
 {
     [CreateAssetMenu(menuName = "StaticData/WeaponConfig", fileName = "WeaponConfig")]
     public class WeaponConfig : ScriptableObject

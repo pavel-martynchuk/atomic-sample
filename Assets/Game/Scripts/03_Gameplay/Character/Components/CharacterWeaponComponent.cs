@@ -1,13 +1,38 @@
+using System;
+using GameEngine;
 using Atomic.Elements;
-using Game.Scripts.Gameplay.Weapons;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Game.Scripts.Gameplay.Character
 {
-    [Searchable]
-    public sealed class CharacterWeaponComponent
+    [Serializable]
+    public sealed class CharacterWeaponComponent : IDisposable
     {
-        public IAtomicVariable<Weapon> CurrentWeapon;
+        [SerializeField, ReadOnly, InlineProperty]
+        private AtomicVariable<Weapon> _currentWeapon = new();
+
+        public WeaponChangeAction WeaponChangeAction;
+
+        public void Compose(Transform weaponOwner, Transform weaponParent)
+        {
+            WeaponChangeAction.Compose(weaponOwner, weaponParent, _currentWeapon);
+        }
         
+        public void OnEnable()
+        {
+            WeaponChangeAction.OnEnable();
+        }
+        
+        public void OnDisable()
+        {
+            WeaponChangeAction.OnDisable();
+        }
+
+        public void Dispose()
+        {
+            _currentWeapon?.Dispose();
+            WeaponChangeAction?.Dispose();
+        }
     }
 }
