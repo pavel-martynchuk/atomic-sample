@@ -21,7 +21,7 @@ namespace GameEngine
             _weaponDropEvent = new AtomicEvent<Weapon>();
         }
         
-        [Button("Drop weapon", ButtonSizes.Small)]
+        [Button("Drop weapon")]
         public void Invoke()
         {
             DropWeapon(_currentWeapon.Value);

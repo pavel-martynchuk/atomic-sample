@@ -10,27 +10,19 @@ namespace GameEngine
     [Serializable]
     public sealed class SpawnBulletAction : IAtomicAction
     {
-        private Transform _firePoint;
-        private AtomicObject _bulletPrefab;
+        private IAtomicValue<Weapon> _currentWeapon;
 
-        public SpawnBulletAction(Transform firePoint, AtomicObject bulletPrefab)
+        public void Compose(IAtomicValue<Weapon> currentWeapon)
         {
-            _firePoint = firePoint;
-            _bulletPrefab = bulletPrefab;
-        }
-
-        public void Compose(Transform firePoint, AtomicObject bulletPrefab)
-        {
-            _firePoint = firePoint;
-            _bulletPrefab = bulletPrefab;
+            _currentWeapon = currentWeapon;
         }
 
         public void Invoke()
         {
             AtomicObject bullet = Object.Instantiate(
-                _bulletPrefab,
-                _firePoint.position,
-                _firePoint.rotation,
+                _currentWeapon.Value.Projectile,
+                _currentWeapon.Value.FirePoint.position,
+                _currentWeapon.Value.FirePoint.rotation,
                 null
             );
             
@@ -38,7 +30,7 @@ namespace GameEngine
             
             if (bulletDirection != null)
             {
-                bulletDirection.Value = _firePoint.forward;
+                bulletDirection.Value = _currentWeapon.Value.FirePoint.forward;
             }
         }
     }

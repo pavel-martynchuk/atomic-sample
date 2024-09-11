@@ -66,9 +66,11 @@ namespace Game.Scripts.Gameplay.Character
             AccelerateMechanics.Compose(data.MovementSpeed, data.AcceleratedSpeed);
             DashAction.Compose(coroutineRunner, _rigidbody, data.DashDistance, data.DashDuration);
             PickupMechanics.Compose();
-            FireComponent.Compose(_firePoint, _bullet);
             Ragdoll.Compose(_animator, _rigidbodies);
-            CharacterWeaponComponent.Compose(_rigidbody.transform, _weaponParent);
+            CharacterWeaponComponent.Compose(_rigidbody.transform, _weaponParent, PickupMechanics.PickingUpCompleteEvent);
+            
+            FireComponent.Compose(CharacterWeaponComponent.CurrentWeapon);
+
 
             _stateController = new UpdateMechanics(StateResolve);
         }

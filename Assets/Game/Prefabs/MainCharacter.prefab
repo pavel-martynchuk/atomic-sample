@@ -304,7 +304,7 @@ MonoBehaviour:
   _parentObject: {fileID: 2333635328746263330}
   _targetObject: {fileID: 0}
   _rotationSpeed: 30
-  _radius: 1
+  _radius: 0.5
 --- !u!1 &5289644979865103937
 GameObject:
   m_ObjectHideFlags: 0

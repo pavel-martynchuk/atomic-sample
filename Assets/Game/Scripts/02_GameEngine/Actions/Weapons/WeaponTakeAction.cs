@@ -19,7 +19,7 @@ namespace GameEngine
             _weaponTakeEvent = new AtomicEvent<Weapon>();
         }
         
-        [Button("Take weapon", ButtonSizes.Small)]
+        [Button("Take weapon")]
         public void Invoke(Weapon weapon)
         {
             TakeWeapon(weapon);

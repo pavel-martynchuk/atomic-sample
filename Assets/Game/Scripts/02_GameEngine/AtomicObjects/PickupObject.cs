@@ -45,11 +45,11 @@ namespace GameEngine.AtomicObjects
             }
             PickupProgress.Refresh(value);
         }
-        
-        public virtual void Use()
+
+        protected virtual void Use()
         {
-            PickupProgress.Hide();
             TriggerCollider.enabled = false;
+            PickupProgress.Hide();
         }
     }
 }

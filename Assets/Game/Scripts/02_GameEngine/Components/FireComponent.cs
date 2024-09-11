@@ -9,6 +9,8 @@ namespace GameEngine
     [Serializable]
     public sealed class FireComponent : IDisposable
     {
+        private IAtomicValue<Weapon> _currentWeapon;
+        
         public AtomicVariable<bool> FireEnable = new(true);
         
         [Get(ObjectAPI.FireAction)]
@@ -16,21 +18,18 @@ namespace GameEngine
         
         public AtomicEvent FireEvent;
         
-        [SerializeField, ReadOnly] private Transform _firePoint;
-        [SerializeField, ReadOnly] private AtomicObject _bulletPrefab;
         [SerializeField, ReadOnly] private AndExpression _fireCondition;
         [SerializeField, ReadOnly] private SpawnBulletAction _spawnBulletAction;
         [SerializeField, ReadOnly] private AtomicVariable<int> _charges = new(10);
         
-        public void Compose(Transform firePoint , AtomicObject bulletPrefab)
+        public void Compose(IAtomicValue<Weapon> currentWeapon)
         {
-            _firePoint = firePoint;
-            _bulletPrefab = bulletPrefab;
-
+            _currentWeapon = currentWeapon;
+            
             _fireCondition.Append(FireEnable);
             _fireCondition.Append(_charges.AsFunction(it => it.Value > 0));
             
-            _spawnBulletAction.Compose(_firePoint, _bulletPrefab);
+            _spawnBulletAction.Compose(_currentWeapon);
             FireAction.Compose(_spawnBulletAction, _charges, _fireCondition);
         }
 

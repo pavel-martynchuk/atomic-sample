@@ -169,6 +169,8 @@ MonoBehaviour:
   PickupProgress: {fileID: 7730917809173985475}
   _config: {fileID: 0}
   _pivot: {fileID: 3986903329406053247}
+  _firePoint: {fileID: 2258516973443311648}
+  _projectile: {fileID: 0}
 --- !u!1 &8299958100396588161
 GameObject:
   m_ObjectHideFlags: 0

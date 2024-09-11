@@ -1,12 +1,11 @@
 using Atomic.Behaviours;
 using Atomic.Elements;
 using Atomic.Objects;
-using GameEngine;
 using UnityEngine;
 
-namespace Game.Scripts.Gameplay
+namespace GameEngine
 {
-    public class Bullet : AtomicBehaviour
+    public class Projectile : AtomicBehaviour
     {
         [SerializeField]
         private bool _composeOnAwake = true;

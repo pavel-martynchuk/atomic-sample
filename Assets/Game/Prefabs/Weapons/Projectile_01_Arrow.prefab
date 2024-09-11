@@ -325,7 +325,7 @@ PrefabInstance:
     - target: {fileID: 4332960894062565084, guid: 9728910bea3b2ad448c1bc9ee4aaad14,
         type: 3}
       propertyPath: m_Name
-      value: Projectile_01_arrow Variant
+      value: Projectile_01_Arrow
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -1,5 +1,6 @@
 using Game.Scripts.UI;
 using GameEngine;
+using GameEngine.AtomicObjects;
 
 namespace Game.Scripts.Gameplay.Character.Main
 {
@@ -52,7 +53,7 @@ namespace Game.Scripts.Gameplay.Character.Main
             _useButton.Hide();
         }
 
-        private void OnPickingUpComplete()
+        private void OnPickingUpComplete(PickupObject pickupObject)
         {
             ResetUseButton();
         }

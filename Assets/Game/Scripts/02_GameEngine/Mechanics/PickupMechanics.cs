@@ -21,7 +21,7 @@ namespace GameEngine
         public IAtomicObservable TriggerExitEvent => _triggerExitEvent;
         public IAtomicObservable StartPickingUpEvent => _startPickingUpEvent;
         public IAtomicObservable StopPickingUpEvent => _stopPickingUpEvent;
-        public IAtomicObservable PickingUpCompleteEvent => _pickingUpCompleteEvent;
+        public IAtomicObservable<PickupObject> PickingUpCompleteEvent => _pickingUpCompleteEvent;
 
         #endregion
 
@@ -31,7 +31,7 @@ namespace GameEngine
         private AtomicEvent _startPickingUpEvent;
         private AtomicEvent _stopPickingUpEvent;
 
-        private AtomicEvent _pickingUpCompleteEvent;
+        private AtomicEvent<PickupObject> _pickingUpCompleteEvent;
 
         [SerializeField, ReadOnly] private float _duration = 0f;
         [SerializeField, ReadOnly] private float _progress = 0f;
@@ -42,7 +42,7 @@ namespace GameEngine
             _triggerExitEvent = new AtomicEvent();
             _startPickingUpEvent = new AtomicEvent();
             _stopPickingUpEvent = new AtomicEvent();
-            _pickingUpCompleteEvent = new AtomicEvent();
+            _pickingUpCompleteEvent = new AtomicEvent<PickupObject>();
         }
 
         public void OnUpdate()
@@ -121,7 +121,7 @@ namespace GameEngine
 
         private void PickingUpComplete()
         {
-            _pickingUpCompleteEvent.Invoke();
+            _pickingUpCompleteEvent.Invoke(_activePickup.Value);
         }
 
         private void ResetPickingUpProgress()

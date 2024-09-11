@@ -1,5 +1,6 @@
 using System;
 using Atomic.Elements;
+using GameEngine.AtomicObjects;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ namespace GameEngine
             DropAction.Compose(weaponOwner, currentWeapon);
         }
         
-        [Button("Change weapon", ButtonSizes.Small)]
+        [Button("Change weapon")]
         public void Invoke(Weapon newWeapon)
         {
             ChangeWeapon(newWeapon);
@@ -39,6 +40,18 @@ namespace GameEngine
         {
             DropAction.WeaponDropEvent.Unsubscribe(OnWeaponDrop);
             TakeAction.WeaponTakeEvent.Unsubscribe(OnWeaponTake);
+        }
+        
+        public void TryToTakePickup(PickupObject pickupObject)
+        {
+            if (pickupObject is Weapon newWeapon)
+            {
+                ChangeWeapon(newWeapon);
+            }
+            else
+            {
+                Debug.LogWarning($"Invalid operation! {pickupObject.name} is not Weapon");
+            }
         }
 
         private void ChangeWeapon(Weapon newWeapon)
