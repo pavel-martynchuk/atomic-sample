@@ -9,34 +9,36 @@ namespace GameEngine
     [Serializable]
     public sealed class FireComponent : IDisposable
     {
-        private IAtomicValue<Weapon> _currentWeapon;
-        
         public AtomicVariable<bool> FireEnable = new(true);
         
+        [SerializeField]
+        private AtomicVariable<Weapon> _currentWeapon;
+
         [Get(ObjectAPI.FireAction)]
         public FireAction FireAction;
-        
+
         public AtomicEvent FireEvent;
         
         [SerializeField, ReadOnly] private AndExpression _fireCondition;
-        [SerializeField, ReadOnly] private SpawnBulletAction _spawnBulletAction;
-        [SerializeField, ReadOnly] private AtomicVariable<int> _charges = new(10);
         
-        public void Compose(IAtomicValue<Weapon> currentWeapon)
+        public void Compose(AtomicVariable<Weapon> currentWeapon)
         {
             _currentWeapon = currentWeapon;
-            
             _fireCondition.Append(FireEnable);
-            _fireCondition.Append(_charges.AsFunction(it => it.Value > 0));
-            
-            _spawnBulletAction.Compose(_currentWeapon);
-            FireAction.Compose(_spawnBulletAction, _charges, _fireCondition);
+            //_fireCondition.Append(_currentWeapon.Value != null);
+            //_fireCondition.Append(_currentWeapon.Value); // ammo have
+            FireAction.Compose(_fireCondition, _currentWeapon.Value.ShotStrategy);
         }
 
+        public void OnUpdate()
+        {
+            _currentWeapon.Value.ShotStrategy.Move();
+        }
+        
         public void Dispose()
         {
+            FireEnable?.Dispose();
             FireEvent?.Dispose();
-            _charges?.Dispose();
         }
     }
 }

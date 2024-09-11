@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c0907736fc845f5bacd651bf5d5e8e1, type: 3}
   m_Name: WeaponConfig_Gun_04_SniperRifle
   m_EditorClassIdentifier: 
-  AmmoPrefab: {fileID: 8498869956646678207, guid: 53155b1e6f560e646a73d1c64d06bcbb,
+  ProjectilePrefab: {fileID: 8853794588483894468, guid: 53155b1e6f560e646a73d1c64d06bcbb,
     type: 3}
   AmmoCapacity: 3
   MaxAmmoCarry: 6

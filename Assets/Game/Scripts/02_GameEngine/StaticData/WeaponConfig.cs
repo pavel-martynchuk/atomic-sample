@@ -7,15 +7,15 @@ namespace GameEngine.Data
     public class WeaponConfig : ScriptableObject
     {
         [Required]
-        public GameObject AmmoPrefab;
+        public Projectile ProjectilePrefab;
         
         [Space(25f)]
         public int AmmoCapacity;
         public int MaxAmmoCarry;
         public float ReloadTime; 
         public float MaxRange; 
-        public float MinDamage;
-        public float MaxDamage;
+        public int MinDamage;
+        public int MaxDamage;
         public float ProjectileSpeed;
     }
 }
