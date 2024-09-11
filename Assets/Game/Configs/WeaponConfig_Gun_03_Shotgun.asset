@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c0907736fc845f5bacd651bf5d5e8e1, type: 3}
   m_Name: WeaponConfig_Gun_03_Shotgun
   m_EditorClassIdentifier: 
-  ProjectilePrefab: {fileID: 1830831436095925279, guid: 3b885be20577ee4499e5a4bb73b4cd6b,
+  ProjectilePrefab: {fileID: 1604575640695881316, guid: 3b885be20577ee4499e5a4bb73b4cd6b,
     type: 3}
   AmmoCapacity: 6
   MaxAmmoCarry: 12
@@ -20,4 +20,4 @@ MonoBehaviour:
   MaxRange: 10
   MinDamage: 1
   MaxDamage: 2
-  ProjectileSpeed: 30
+  ProjectileSpeed: 10

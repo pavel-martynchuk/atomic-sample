@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GameEngine.Data;
 using UnityEngine;
 
@@ -5,28 +6,34 @@ namespace GameEngine
 {
     public class SingleShot : ShotStrategy
     {
-        private Projectile _projectileInstance;
-        public SingleShot(Projectile projectile, Transform firePoint,
+        public SingleShot(GameObject projectile, Transform firePoint,
             WeaponConfig weaponConfig) : base(projectile, firePoint, weaponConfig)
         {
         }
 
         public override void Shot()
         {
-            _projectileInstance = Object.Instantiate(Projectile, FirePoint.position, FirePoint.rotation);
-            _projectileInstance.transform.forward = FirePoint.forward;
+            GameObject projectileInstance = Object.Instantiate(Projectile, FirePoint.position, FirePoint.rotation);
+            projectileInstance.transform.forward = FirePoint.forward;
+            ProjectileInstances.Add(projectileInstance);
         }
 
         public override void Move()
         {
-            if (_projectileInstance == null)
-                return;
+            List<GameObject> projectilesToRemove = new();
 
-            _projectileInstance.transform.Translate(_projectileInstance.transform.forward * WeaponConfig.ProjectileSpeed * Time.deltaTime);
-
-            if (Vector3.Distance(_projectileInstance.transform.position, FirePoint.position) >= WeaponConfig.MaxRange)
+            foreach (GameObject projectile in ProjectileInstances)
             {
-                Object.Destroy(_projectileInstance.gameObject);
+                Transform projectileTransform = projectile.transform;
+                projectileTransform.Translate(projectileTransform.forward * WeaponConfig.ProjectileSpeed * Time.deltaTime, Space.World);
+                if (Vector3.Distance(projectileTransform.position, FirePoint.position) >= WeaponConfig.MaxRange)
+                {
+                    projectilesToRemove.Add(projectile);
+                }
+            }
+            foreach (GameObject projectile in projectilesToRemove)
+            {
+                RemoveProjectile(projectile);
             }
         }
     }

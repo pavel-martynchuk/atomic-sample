@@ -1,6 +1,7 @@
 using System;
 using Atomic.Elements;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace GameEngine
 {
@@ -8,12 +9,14 @@ namespace GameEngine
     public sealed class FireAction : IAtomicAction
     {
         private IAtomicValue<bool> _shootCondition;
-        private ShotStrategy _shotStrategy;
+        
+        [ShowInInspector]
+        private IAtomicVariable<Weapon> _weapon;
 
-        public void Compose(IAtomicValue<bool> shootCondition, ShotStrategy shotStrategy)
+        public void Compose(IAtomicValue<bool> shootCondition, IAtomicVariable<Weapon> weapon)
         {
             _shootCondition = shootCondition;
-            _shotStrategy = shotStrategy;
+            _weapon = weapon;
         }
 
         [Button]
@@ -21,8 +24,8 @@ namespace GameEngine
         {
             if (!_shootCondition.Value)
                 return;
-
-            _shotStrategy.Shot();
+            
+            _weapon.Value.ShotStrategy.Shot();
         }
     }
 }

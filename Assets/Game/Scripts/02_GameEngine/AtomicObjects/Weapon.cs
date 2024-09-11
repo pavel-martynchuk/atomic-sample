@@ -8,9 +8,15 @@ namespace GameEngine
 {
     public class Weapon : PickupObject
     {
+        #region Public API
+
         public Transform Pivot => _pivot;
         public Transform FirePoint => _firePoint;
-        public Projectile Projectile => _config.ProjectilePrefab;
+        public GameObject Projectile => _config.ProjectilePrefab;
+
+        #endregion
+        
+        [SerializeField] private bool _composeOnAwake = true;
 
         [SerializeField, Required] private WeaponConfig _config;
         [SerializeField, Required] private Transform _pivot;
@@ -20,6 +26,14 @@ namespace GameEngine
 
         public ShotStrategy ShotStrategy => _shotStrategy;
         private ShotStrategy _shotStrategy;
+
+        private void Awake()
+        {
+            if (_composeOnAwake)
+            {
+                Compose();
+            }
+        }
 
         public override void Compose()
         {

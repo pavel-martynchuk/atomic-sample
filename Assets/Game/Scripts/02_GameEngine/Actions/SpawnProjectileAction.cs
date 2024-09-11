@@ -1,5 +1,6 @@
 using System;
 using Atomic.Elements;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace GameEngine
@@ -16,14 +17,12 @@ namespace GameEngine
 
         public void Invoke()
         {
-            Projectile projectile = Object.Instantiate(
+            GameObject projectile = Object.Instantiate(
                 _currentWeapon.Value.Projectile,
                 _currentWeapon.Value.FirePoint.position,
                 _currentWeapon.Value.FirePoint.rotation,
                 null
             );
-            
-            
         }
     }
 }

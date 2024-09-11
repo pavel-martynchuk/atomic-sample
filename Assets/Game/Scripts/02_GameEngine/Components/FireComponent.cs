@@ -11,8 +11,7 @@ namespace GameEngine
     {
         public AtomicVariable<bool> FireEnable = new(true);
         
-        [SerializeField]
-        private AtomicVariable<Weapon> _currentWeapon;
+        private IAtomicVariable<Weapon> _currentWeapon;
 
         [Get(ObjectAPI.FireAction)]
         public FireAction FireAction;
@@ -21,18 +20,18 @@ namespace GameEngine
         
         [SerializeField, ReadOnly] private AndExpression _fireCondition;
         
-        public void Compose(AtomicVariable<Weapon> currentWeapon)
+        public void Compose(IAtomicVariable<Weapon> currentWeapon)
         {
             _currentWeapon = currentWeapon;
             _fireCondition.Append(FireEnable);
             //_fireCondition.Append(_currentWeapon.Value != null);
             //_fireCondition.Append(_currentWeapon.Value); // ammo have
-            FireAction.Compose(_fireCondition, _currentWeapon.Value.ShotStrategy);
+            FireAction.Compose(_fireCondition, _currentWeapon);
         }
 
         public void OnUpdate()
         {
-            _currentWeapon.Value.ShotStrategy.Move();
+            _currentWeapon.Value?.ShotStrategy.Move();
         }
         
         public void Dispose()

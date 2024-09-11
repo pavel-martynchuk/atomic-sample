@@ -10,7 +10,7 @@ namespace Game.Scripts.Gameplay.Character
     [Serializable]
     public sealed class CharacterWeaponComponent : IDisposable
     {
-        public AtomicVariable<Weapon> CurrentWeapon => _currentWeapon;
+        public IAtomicVariable<Weapon> CurrentWeapon => _currentWeapon;
 
         [SerializeField, ReadOnly, InlineProperty]
         private AtomicVariable<Weapon> _currentWeapon = new();

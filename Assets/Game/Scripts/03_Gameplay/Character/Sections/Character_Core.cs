@@ -83,6 +83,7 @@ namespace Game.Scripts.Gameplay.Character
 
         public void OnUpdate()
         {
+            FireComponent.OnUpdate();
             PickupMechanics.OnUpdate();
             _stateController.OnUpdate(Time.deltaTime);
         }

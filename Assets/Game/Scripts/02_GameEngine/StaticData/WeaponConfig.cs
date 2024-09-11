@@ -7,7 +7,7 @@ namespace GameEngine.Data
     public class WeaponConfig : ScriptableObject
     {
         [Required]
-        public Projectile ProjectilePrefab;
+        public GameObject ProjectilePrefab;
         
         [Space(25f)]
         public int AmmoCapacity;

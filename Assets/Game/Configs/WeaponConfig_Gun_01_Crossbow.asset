@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c0907736fc845f5bacd651bf5d5e8e1, type: 3}
   m_Name: WeaponConfig_Gun_01_Crossbow
   m_EditorClassIdentifier: 
-  ProjectilePrefab: {fileID: 6453228850668132836, guid: 0853eb6b306b0a54a8569d2969f33259,
+  ProjectilePrefab: {fileID: 6242704884740770719, guid: 0853eb6b306b0a54a8569d2969f33259,
     type: 3}
   AmmoCapacity: 1
   MaxAmmoCarry: 6

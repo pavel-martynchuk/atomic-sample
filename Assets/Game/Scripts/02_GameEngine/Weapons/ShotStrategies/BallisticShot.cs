@@ -7,10 +7,10 @@ namespace GameEngine
     public class BallisticShot : ShotStrategy
     {
         private Rigidbody _rigidbody;
-        private Projectile _projectileInstance;
+        private GameObject _projectileInstance;
         private readonly IAtomicVariable<Transform> _target;
 
-        public BallisticShot(Projectile projectile, Transform firePoint, WeaponConfig weaponConfig,
+        public BallisticShot(GameObject projectile, Transform firePoint, WeaponConfig weaponConfig,
             IAtomicVariable<Transform> target) : base(projectile, firePoint, weaponConfig)
         {
             _target = target;
