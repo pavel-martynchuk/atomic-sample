@@ -10,9 +10,13 @@ namespace Game.Scripts.Gameplay.Traps
     public class Mine : Trap, ITargeted
     {
         [SerializeField]
-        [BoxGroup("Damage Effect"), HideLabel]
+        [BoxGroup("DamageEffect"), HideLabel]
         private DamageEffect _damageEffect;
 
+        [SerializeField]
+        [BoxGroup("ThrowbackEffect"), HideLabel]
+        private ThrowbackEffect _throwbackEffect;
+        
         public Vector3 GetPosition() => 
             transform.position;
         
@@ -20,8 +24,14 @@ namespace Game.Scripts.Gameplay.Traps
         {
             if (atomicObject.Is(ObjectType.Damageable))
             {
+                Debug.LogError(1);
                 _damageEffect.ApplyEffect(atomicObject);
             }
+            if (atomicObject.Is(ObjectType.Physical))
+            {
+                _throwbackEffect.ApplyEffect(atomicObject);
+            }
+
         }
     }
 }

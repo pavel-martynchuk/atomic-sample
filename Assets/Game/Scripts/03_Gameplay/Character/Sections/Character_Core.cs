@@ -37,10 +37,13 @@ namespace Game.Scripts.Gameplay.Character
         [Section] [Get(ObjectAPI.DashAction)] [BoxGroup("Dash action")]
         public DashAction DashAction;
 
-        [Section] [Get(ObjectAPI.PickupMechanics)] [BoxGroup("Pickup")]
+        [Section] [Get(ObjectAPI.PickupMechanics)][BoxGroup("Pickup")]
         public PickupMechanics PickupMechanics;
 
-        [BoxGroup("Ragdoll")] public RagdollComponent RagdollComponent;
+        [Section]
+        [Get(ObjectAPI.RagdollComponent)] 
+        [BoxGroup("Ragdoll")] 
+        public RagdollComponent RagdollComponent;
 
         [BoxGroup("CharacterWeaponComponent")]
         public CharacterWeaponComponent CharacterWeaponComponent;
@@ -61,7 +64,7 @@ namespace Game.Scripts.Gameplay.Character
             AccelerateMechanics.Compose(data.MovementSpeed, data.AcceleratedSpeed);
             DashAction.Compose(coroutineRunner, _rigidbody, data.DashDistance, data.DashDuration);
             PickupMechanics.Compose();
-            RagdollComponent.Compose();
+            RagdollComponent.Compose(coroutineRunner);
             FireComponent.Compose(CharacterWeaponComponent.CurrentWeapon);
             
             TargetCaptureMechanics.Compose(new AtomicFunction<bool>(() => CharacterWeaponComponent.CurrentWeapon.Value != null));
@@ -87,6 +90,7 @@ namespace Game.Scripts.Gameplay.Character
             CharacterWeaponComponent.OnEnable();
             PickupMechanics.OnEnable();
             TargetCaptureMechanics.OnEnable();
+            RagdollComponent.OnEnable();
         }
 
         public void OnDisable()
@@ -95,6 +99,7 @@ namespace Game.Scripts.Gameplay.Character
             CharacterWeaponComponent.OnDisable();
             PickupMechanics.OnDisable();
             TargetCaptureMechanics.OnDisable();
+            RagdollComponent.OnDisable();
         }
 
         public void OnUpdate()
@@ -102,7 +107,7 @@ namespace Game.Scripts.Gameplay.Character
             FireComponent.OnUpdate();
             PickupMechanics.OnUpdate();
             TargetCaptureMechanics.OnUpdate();
-
+            RagdollComponent.OnUpdate();
             _stateController.OnUpdate(Time.deltaTime);
         }
 

@@ -2344,6 +2344,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Trap_02_Mine
       objectReference: {fileID: 0}
+    - target: {fileID: 2871762849593706346, guid: 54d39f36aed2b5646b3ffdd90bfba76c,
+        type: 3}
+      propertyPath: _force
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 5624135694323461540, guid: 54d39f36aed2b5646b3ffdd90bfba76c,
+        type: 3}
+      propertyPath: _damageValue.value
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

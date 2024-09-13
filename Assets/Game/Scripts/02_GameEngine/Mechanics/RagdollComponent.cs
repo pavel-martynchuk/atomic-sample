@@ -1,23 +1,31 @@
 using System;
+using System.Collections;
 using Atomic.Elements;
-using DG.Tweening;
+using Atomic.Objects;
+using Game.Scripts.Infrastructure.Services.Coroutines;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace GameEngine
 {
     [Serializable]
+    [Is(ObjectType.Physical)]
     public sealed class RagdollComponent : IDisposable
     {
         public IAtomicValue<bool> IsActive => _isActive;
         
+        [ShowInInspector, ReadOnly]
         private AtomicVariable<bool> _isActive = new(false);
 
         [SerializeField] private Transform _rootParent;
         [SerializeField] private Rigidbody _rootRigidbody;
         [SerializeField] private Animator _animator;
-        [SerializeField] private Rigidbody[] _rigidbodies;
+        [SerializeField] private CharacterAnimationEventProxy _eventProxy;
         [SerializeField] private Transform _core;
+        [SerializeField] private Rigidbody[] _rigidbodies;
+        
+        [Get(ObjectAPI.Rigidbody)]
+        [SerializeField] private Rigidbody _hipRb;
         
         private bool IsFrontUp => Vector3.Dot(_hipsBone.up, Vector3.up) > 0;
         private Transform _hipsBone;
@@ -25,11 +33,43 @@ namespace GameEngine
         private const string FrontStandClipName = "Getting Up From Spine";
         private const int DefaultLayer = -1;
         private Action _standingUpCallback;
+        private UpdateMechanics _stateController;
+        private bool _isStandingInProcess = false;
+        private bool _delay = false;
+        private ICoroutineRunner _coroutineRunner;
 
-        public void Compose()
+        public void Compose(ICoroutineRunner coroutineRunner)
         {
+            _coroutineRunner = coroutineRunner;
             _hipsBone = _animator.GetBoneTransform(HumanBodyBones.Hips);
+            _stateController = new UpdateMechanics(StateResolve);
             DisableRagdoll(true);
+        }
+
+        public void OnEnable()
+        {
+            _eventProxy.StandingUpAnimationEnded += OnStandingUpAnimationEnded;
+        }
+        
+        public void OnDisable()
+        {
+            _eventProxy.StandingUpAnimationEnded -= OnStandingUpAnimationEnded;
+        }
+
+        public void OnUpdate()
+        {
+            _stateController.OnUpdate(Time.deltaTime);
+        }
+
+        private void StateResolve()
+        {
+            if (_isActive.Value && !_isStandingInProcess && !_delay)
+            {
+                if (_rootRigidbody.velocity.magnitude <= 0.1f)
+                {
+                    PlayStandingUp();
+                }
+            }
         }
 
         [Button]
@@ -38,6 +78,7 @@ namespace GameEngine
             if (_isActive.Value)
                 return;
 
+            _coroutineRunner.StartCoroutine(Delay());
             _rootRigidbody.isKinematic = true;
             _core.SetParent(_hipsBone);
             _animator.enabled = false;
@@ -48,26 +89,28 @@ namespace GameEngine
             _isActive.Value = true;
         }
         
-        public void DisableRagdoll(bool withFlag)
+        public void DisableRagdoll(bool isPermanent)
         {
             if (!_isActive.Value)
                 return;
             _animator.enabled = true;
             _core.SetParent(_rootParent);
             _core.localScale = Vector3.one;
-            _core.DOLocalMove(Vector3.zero, 1f);
-            _core.DOLocalRotate(Vector3.zero, 1f);
+            _core.localPosition = Vector3.zero;
+            _core.localRotation = Quaternion.identity;
             foreach (Rigidbody rigidbody in _rigidbodies)
             {
                 rigidbody.isKinematic = true;
             }
-            _rootRigidbody.isKinematic = !withFlag;
-            _isActive.Value = withFlag;
+            _rootRigidbody.isKinematic = !isPermanent;
+            _isActive.Value = !isPermanent;
         }
         
         [Button]
         public void PlayStandingUp(Action animationEndedCallback = null)
         {
+            _isStandingInProcess = true;
+            
             if (!_isActive.Value)
                 return;
             
@@ -78,14 +121,19 @@ namespace GameEngine
             
             _standingUpCallback = animationEndedCallback;
 
-            if (IsFrontUp)
-                _animator.Play(FrontStandClipName, DefaultLayer, 0f);
-            else
-                _animator.Play(BackStandUpClipName, DefaultLayer, 0f);
+            _animator.Play(IsFrontUp ? FrontStandClipName : BackStandUpClipName, DefaultLayer, 0f);
+        }
+
+        IEnumerator Delay()
+        {
+            _delay = true;
+            yield return new WaitForSeconds(3f);
+            _delay = false;
         }
         
-        public void OnStandingUpAnimationEnded()
+        private void OnStandingUpAnimationEnded()
         {
+            _isStandingInProcess = false;
             _rootRigidbody.isKinematic = false;
             _isActive.Value = false;
             _standingUpCallback?.Invoke();
@@ -125,6 +173,7 @@ namespace GameEngine
             _hipsBone.position = initHipsPosition;
             _hipsBone.rotation = initHipsRotation;
         }
+
 
         public void Dispose()
         {

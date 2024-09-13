@@ -17,8 +17,7 @@ namespace GameEngine.Effects
         public override void ApplyEffect(AtomicObject atomicObject)
         {
             Stat speed = atomicObject.Get<Stat>(ObjectAPI.SpeedStat);
-            Debug.LogError(speed);
-
+            
             switch (ApplicationStrategy)
             {
                 case ContinuousPermanentApplication strategy:

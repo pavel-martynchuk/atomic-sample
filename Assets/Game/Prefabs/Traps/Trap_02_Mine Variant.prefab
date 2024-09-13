@@ -269,6 +269,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5624135694323461540}
+    - targetCorrespondingSourceObject: {fileID: 248509768379710676, guid: c1859fe3725db7a4ba9d37d9e3e12062,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2871762849593706346}
   m_SourcePrefab: {fileID: 100100000, guid: c1859fe3725db7a4ba9d37d9e3e12062, type: 3}
 --- !u!1 &2717698984217954527 stripped
 GameObject:
@@ -292,6 +296,7 @@ MonoBehaviour:
   TriggerObserver: {fileID: 6210001309904750386}
   Animation: {fileID: 0}
   _damageEffect: {fileID: 5624135694323461540}
+  _throwbackEffect: {fileID: 2871762849593706346}
 --- !u!114 &5624135694323461540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,6 +320,31 @@ MonoBehaviour:
     version: 2
     RefIds:
     - rid: 4006890048308379664
+      type: {class: SingleApplication, ns: GameEngine.Effects.Application, asm: Assembly-CSharp}
+      data: 
+--- !u!114 &2871762849593706346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2717698984217954527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a282602d3217420083f9317f28c97b3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Targets:
+    serializedVersion: 2
+    m_Bits: 64
+  ApplicationStrategy:
+    rid: 8972670499033710592
+  _throwDirection: 4
+  _force: 100
+  references:
+    version: 2
+    RefIds:
+    - rid: 8972670499033710592
       type: {class: SingleApplication, ns: GameEngine.Effects.Application, asm: Assembly-CSharp}
       data: 
 --- !u!114 &6210001309904750386 stripped
