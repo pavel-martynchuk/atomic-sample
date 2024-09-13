@@ -26,6 +26,7 @@ namespace GameEngine
 
                 projectileInstance.transform.forward = spreadDirection;
             }
+            OnShot.Invoke();
         }
 
         public override void Move()

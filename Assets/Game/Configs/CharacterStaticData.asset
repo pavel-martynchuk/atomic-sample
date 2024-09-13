@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13a3af9a73614087b281dca3ab01d8fc, type: 3}
   m_Name: CharacterStaticData
   m_EditorClassIdentifier: 
-  Health: 10
+  Health: 50
   MovementSpeed: 8
   AcceleratedSpeed: 12
   RotationSpeed: 10

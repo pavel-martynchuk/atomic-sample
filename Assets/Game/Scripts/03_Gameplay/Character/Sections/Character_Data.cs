@@ -1,6 +1,8 @@
 using System;
 using Atomic.Elements;
+using Atomic.Objects;
 using Game.Scripts.StaticData;
+using GameEngine;
 using GameEngine.Data;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -14,8 +16,9 @@ namespace Game.Scripts.Gameplay.Character
         [ReadOnly, InlineProperty]
         public AtomicVariable<int> Health;
         
-        [PropertySpace(SpaceBefore = 24, SpaceAfter = 24)]
         [InlineProperty]
+        [PropertySpace(SpaceBefore = 24, SpaceAfter = 24)]
+        [Get(ObjectAPI.SpeedStat)]
         public Stat MovementSpeed;
         
         [ReadOnly, InlineProperty]
@@ -29,8 +32,9 @@ namespace Game.Scripts.Gameplay.Character
         
         public void Compose(CharacterStaticData staticDataConfig)
         {
+            MovementSpeed.Compose(staticDataConfig.MovementSpeed);
+            
             Health = new AtomicVariable<int>(staticDataConfig.Health);
-            MovementSpeed = new Stat(staticDataConfig.MovementSpeed);
             RotationSpeed = new AtomicVariable<float>(staticDataConfig.RotationSpeed);
 
             AcceleratedSpeed = new AtomicValue<float>(staticDataConfig.AcceleratedSpeed);

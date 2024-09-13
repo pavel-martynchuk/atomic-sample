@@ -20,4 +20,4 @@ MonoBehaviour:
   MaxRange: 15
   MinDamage: 10
   MaxDamage: 12
-  ProjectileSpeed: 10
+  ProjectileSpeed: 15

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Game.Scripts.Gameplay
+namespace GameEngine
 {
     public class TriggerObserver : MonoBehaviour
     {
@@ -9,7 +9,7 @@ namespace Game.Scripts.Gameplay
 
         public event Action<Collider> TriggerEnter;
         public event Action<Collider> TriggerExit;
-        
+
         private void OnTriggerEnter(Collider other)
         {
             if (IsInTriggerLayerMask(other.gameObject))

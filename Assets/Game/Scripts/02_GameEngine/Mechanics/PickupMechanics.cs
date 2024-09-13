@@ -10,10 +10,13 @@ namespace GameEngine
     public sealed class PickupMechanics : IDisposable
     {
         [ShowInInspector, PropertyOrder(-1)] public bool IsEnable => _activePickup.Value != null;
+
+        [SerializeField, Required] private TriggerObserver _triggerObserver;
+
         [ShowInInspector, ReadOnly] private bool _isProcessing = false;
 
         [SerializeField, ReadOnly, InlineProperty]
-        private AtomicVariable<PickupObject> _activePickup = new();
+        private AtomicVariable<PickupObject> _activePickup;
 
         #region Public API
 
@@ -50,7 +53,19 @@ namespace GameEngine
             PickingUpCheck();
         }
 
-        public void OnTriggerEnter(Collider collider)
+        public void OnEnable()
+        {
+            _triggerObserver.TriggerEnter += OnTriggerEnter;
+            _triggerObserver.TriggerExit += OnTriggerExit;
+        }
+
+        public void OnDisable()
+        {
+            _triggerObserver.TriggerEnter += OnTriggerEnter;
+            _triggerObserver.TriggerExit += OnTriggerExit;
+        }
+
+        private void OnTriggerEnter(Collider collider)
         {
             PickupObject pickupObject = collider.GetComponentInParent<PickupObject>();
             if (pickupObject != null)
@@ -60,7 +75,7 @@ namespace GameEngine
             }
         }
 
-        public void OnTriggerExit(Collider collider)
+        private void OnTriggerExit(Collider collider)
         {
             PickupObject pickupObject = collider.GetComponentInParent<PickupObject>();
             if (pickupObject != null && pickupObject == _activePickup.Value)
@@ -102,10 +117,10 @@ namespace GameEngine
                 return;
 
             _activePickup.Value.RefreshPickupProgress(_progress);
-            
+
             if (!_isProcessing)
                 return;
-            
+
             PickingUpInProcess();
         }
 

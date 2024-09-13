@@ -12,16 +12,22 @@ namespace GameEngine
         private AtomicVariable<Weapon> _currentWeapon;
 
         [HideLabel]
-        public WeaponTakeAction TakeAction;
-
-        [HideLabel]
         public WeaponDropAction DropAction;
 
-        public void Compose(Transform weaponOwner, Transform weaponParent, AtomicVariable<Weapon> currentWeapon)
+        [HideLabel]
+        public WeaponTakeAction TakeAction;
+
+        private TargetCaptureMechanics _targetCaptureMechanics;
+
+        public void Compose(Transform weaponOwner,
+            Transform weaponParent,
+            AtomicVariable<Weapon> currentWeapon,
+            TargetCaptureMechanics targetCaptureMechanics)
         {
             _currentWeapon = currentWeapon;
             TakeAction.Compose(weaponParent);
             DropAction.Compose(weaponOwner, currentWeapon);
+            _targetCaptureMechanics = targetCaptureMechanics;
         }
         
         [Button("Change weapon")]
@@ -48,24 +54,28 @@ namespace GameEngine
             {
                 ChangeWeapon(newWeapon);
             }
-            else
-            {
-                Debug.LogWarning($"Invalid operation! {pickupObject.name} is not Weapon");
-            }
         }
 
         private void ChangeWeapon(Weapon newWeapon)
         {
-            if (_currentWeapon.Value != null) 
+            if (_currentWeapon.Value != null)
+            {
                 DropAction.Invoke();
+            }
             TakeAction.Invoke(newWeapon);
         }
         
-        private void OnWeaponDrop(Weapon weapon) => 
+        private void OnWeaponDrop(Weapon weapon)
+        {
+            _currentWeapon.Value.OnDropped();
             _currentWeapon.Value = null;
+        }
 
-        private void OnWeaponTake(Weapon weapon) => 
+        private void OnWeaponTake(Weapon weapon)
+        {
             _currentWeapon.Value = weapon;
+            _currentWeapon.Value.OnTaken(_targetCaptureMechanics);
+        }
 
         public void Dispose()
         {

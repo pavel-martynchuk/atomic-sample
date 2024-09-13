@@ -21,7 +21,7 @@ namespace GameEngine.AtomicObjects
             PickupDuration = pickupDuration;
         }
 
-        private void Start()
+        protected virtual void Start()
         {
             Deselect();
         }
@@ -46,10 +46,15 @@ namespace GameEngine.AtomicObjects
             PickupProgress.Refresh(value);
         }
 
-        protected virtual void Use()
+        public virtual void OnTaken()
         {
             TriggerCollider.enabled = false;
             PickupProgress.Hide();
+        }
+        
+        public virtual void OnDropped()
+        {
+            TriggerCollider.enabled = true;
         }
     }
 }

@@ -11,27 +11,22 @@ namespace Game.Scripts.GameEngine.UI
         [SerializeField, Required] private Transform _parent;
         [SerializeField, MinValue(0f)] private float _animDuration = 0.25f;
 
-        private Tween _currentTween;
-
-        private void Awake() => 
-            CacheAnimation();
-
         public void Reset()
         {
             _parent.localScale = Vector3.zero;
             Init(false);
         }
 
+        [Button]
         public void Show()
         {
-            _currentTween?.Kill();
-            _currentTween = _parent.DOScale(Vector3.one, _animDuration);
+            _parent.DOScale(Vector3.one, _animDuration).SetLink(gameObject);
         }
 
+        [Button]
         public void Hide()
         {
-            _currentTween?.Kill();
-            _currentTween = _parent.DOScale(Vector3.zero, _animDuration);
+            _parent.DOScale(Vector3.zero, _animDuration).SetLink(gameObject);
         }
 
         public override void Init(bool isFilled) => 
@@ -39,8 +34,5 @@ namespace Game.Scripts.GameEngine.UI
 
         public override void Refresh(float clampedValue) => 
             _fillRing.fillAmount = clampedValue;
-        
-        private void CacheAnimation() => 
-            _currentTween.SetLink(gameObject).SetUpdate(true);
     }
 }

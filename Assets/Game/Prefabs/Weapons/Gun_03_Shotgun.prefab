@@ -262,6 +262,11 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 7389552962757279126, guid: c18eba1093979d34084ba5319065a3f6,
         type: 3}
+      propertyPath: _ammoType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7389552962757279126, guid: c18eba1093979d34084ba5319065a3f6,
+        type: 3}
       propertyPath: _projectile
       value: 
       objectReference: {fileID: 1830831436095925279, guid: 3b885be20577ee4499e5a4bb73b4cd6b,

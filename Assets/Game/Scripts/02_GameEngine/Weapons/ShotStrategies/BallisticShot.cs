@@ -1,4 +1,3 @@
-using Atomic.Elements;
 using GameEngine.Data;
 using UnityEngine;
 
@@ -6,51 +5,91 @@ namespace GameEngine
 {
     public class BallisticShot : ShotStrategy
     {
-        private Rigidbody _rigidbody;
-        private GameObject _projectileInstance;
-        private readonly IAtomicVariable<Transform> _target;
-
-        public BallisticShot(GameObject projectile, Transform firePoint, WeaponConfig weaponConfig,
-            IAtomicVariable<Transform> target) : base(projectile, firePoint, weaponConfig)
+        public TargetCaptureMechanics TargetCaptureMechanics
         {
-            _target = target;
+            set => _targetCaptureMechanics = value;
+        }
+
+        private TargetCaptureMechanics _targetCaptureMechanics;
+        private const float LaunchAngle = 60f;
+
+        public BallisticShot(GameObject projectile, Transform firePoint, WeaponConfig weaponConfig)
+            : base(projectile, firePoint, weaponConfig)
+        {
         }
 
         public override void Shot()
         {
-            _projectileInstance = Object.Instantiate(Projectile, FirePoint.position, FirePoint.rotation);
+            Vector3 targetPosition;
 
-            _rigidbody = _projectileInstance.GetComponent<Rigidbody>();
-
-            if (_rigidbody == null)
+            if (_targetCaptureMechanics?.CurrentTarget?.Value == null)
             {
-                Debug.LogError("Projectile does not have a Rigidbody!");
+                targetPosition = FirePoint.position + FirePoint.forward * WeaponConfig.MaxRange;
+            }
+            else
+            {
+                targetPosition = _targetCaptureMechanics.CurrentTarget.Value.position;
+
+                if (Vector3.Distance(FirePoint.position, targetPosition) < 0.1f)
+                {
+                    Debug.LogWarning("The target is too close.");
+                    return;
+                }
+            }
+
+            GameObject projectileInstance = Object.Instantiate(Projectile, FirePoint.position, Quaternion.identity);
+            ProjectileInstances.Add(projectileInstance);
+
+            Rigidbody rb = projectileInstance.GetComponent<Rigidbody>();
+            if (rb == null)
+            {
+                Debug.LogError("The projectile does not have a Rigidbody component.");
                 return;
             }
-            _rigidbody.useGravity = true;
-            _rigidbody.velocity = Vector3.zero;
-            Vector3 velocity = CalculateBallisticVelocity(FirePoint.position, _target.Value.position, WeaponConfig.ProjectileSpeed);
-            _rigidbody.AddForce(velocity, ForceMode.VelocityChange);
+
+            Vector3 velocity = CalculateLaunchVelocity(targetPosition);
+            if (float.IsNaN(velocity.x) || float.IsNaN(velocity.y) || float.IsNaN(velocity.z))
+            {
+                Debug.LogError("The calculated speed contains incorrect values.");
+                return;
+            }
+
+            rb.velocity = velocity;
+            OnShot.Invoke();
         }
 
         public override void Move() { }
 
-        private Vector3 CalculateBallisticVelocity(Vector3 origin, Vector3 target, float initialSpeed)
+        private Vector3 CalculateLaunchVelocity(Vector3 targetPosition)
         {
-            Vector3 toTarget = target - origin;
-            Vector3 toTargetXZ = new(toTarget.x, 0, toTarget.z);
+            Vector3 direction = targetPosition - FirePoint.position;
+            float horizontalDistance = new Vector3(direction.x, 0, direction.z).magnitude;
 
-            float yOffset = toTarget.y;
-            float xzDistance = toTargetXZ.magnitude;
+            if (horizontalDistance == 0)
+            {
+                Debug.LogError("Горизонтальная дистанция равна нулю.");
+                return Vector3.zero;
+            }
 
-            float time = xzDistance / initialSpeed;
+            float heightDifference = direction.y;
+            float launchAngleRadians = LaunchAngle * Mathf.Deg2Rad;
+            float gravity = Mathf.Abs(Physics.gravity.y);
+            float cosLaunchAngle = Mathf.Cos(launchAngleRadians);
 
-            float verticalVelocity = (yOffset / time) + 0.5f * Mathf.Abs(Physics.gravity.y) * time;
+            float velocitySquared = (gravity * horizontalDistance * horizontalDistance) /
+                (2 * cosLaunchAngle * cosLaunchAngle * (horizontalDistance * Mathf.Tan(launchAngleRadians) - heightDifference));
 
-            Vector3 result = toTargetXZ.normalized * initialSpeed;
-            result.y = verticalVelocity;
+            if (velocitySquared <= 0)
+            {
+                Debug.LogError("Рассчитанное квадрат скорости имеет некорректное значение.");
+                return Vector3.zero;
+            }
 
-            return result;
+            float initialVelocity = Mathf.Sqrt(velocitySquared);
+            Vector3 velocity = new Vector3(direction.x, 0, direction.z).normalized * initialVelocity * cosLaunchAngle;
+            velocity.y = initialVelocity * Mathf.Sin(launchAngleRadians);
+
+            return velocity;
         }
     }
 }

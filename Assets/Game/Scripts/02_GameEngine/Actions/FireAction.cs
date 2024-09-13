@@ -6,7 +6,7 @@ using UnityEngine;
 namespace GameEngine
 {
     [Serializable]
-    public sealed class FireAction : IAtomicAction
+    public sealed class FireAction : AtomicEvent
     {
         private IAtomicValue<bool> _shootCondition;
         
@@ -20,12 +20,20 @@ namespace GameEngine
         }
 
         [Button]
-        public void Invoke()
+        public override void Invoke()
         {
             if (!_shootCondition.Value)
                 return;
-            
-            _weapon.Value.ShotStrategy.Shot();
+
+            if (_weapon.Value.HasAmmo.Value)
+            {
+                _weapon.Value.ShotStrategy.Shot();
+            }
+            else
+            {
+                Debug.LogWarning("No ammo!");
+            }
+            base.Invoke();
         }
     }
 }

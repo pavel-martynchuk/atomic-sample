@@ -12,6 +12,7 @@ namespace Game.Scripts.Character
         [SerializeField] private bool _composeOnAwake = true;
         [SerializeField, Required] private CharacterStaticData _staticDataConfig;
         
+        [Section]
         [SerializeField]
         [BoxGroup("Data")]
         private Character_Data _data;
@@ -56,16 +57,6 @@ namespace Game.Scripts.Character
         private void FixedUpdate()
         {
             _core.OnFixedUpdate();
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            _core.OnTriggerEnter(other);
-        }
-        
-        private void OnTriggerExit(Collider other)
-        {
-            _core.OnTriggerExit(other);
         }
 
         private void OnDisable()

@@ -1,6 +1,7 @@
 using System;
 using GameEngine;
 using Atomic.Elements;
+using Game.Scripts.Infrastructure.Services.Coroutines;
 using GameEngine.AtomicObjects;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -13,36 +14,52 @@ namespace Game.Scripts.Gameplay.Character
         public IAtomicVariable<Weapon> CurrentWeapon => _currentWeapon;
 
         [SerializeField, ReadOnly, InlineProperty]
-        private AtomicVariable<Weapon> _currentWeapon = new();
+        private AtomicVariable<Weapon> _currentWeapon;
 
-        public WeaponChangeAction WeaponChangeAction;
+        [SerializeField] 
+        private WeaponChangeAction _weaponChangeAction;
+        
+        [SerializeField, ReadOnly] 
+        private ReloadingMechanics _reloadingMechanics;
+        
+        private CharacterInventoryComponent _characterInventoryComponent;
         private IAtomicObservable<PickupObject> _pickupEvent;
 
-        public void Compose(
-            Transform weaponOwner,
+        public void Compose(Transform weaponOwner,
             Transform weaponParent,
-            IAtomicObservable<PickupObject> pickupEvent)
+            IAtomicObservable<PickupObject> pickupEvent,
+            TargetCaptureMechanics targetCaptureMechanics,
+            CharacterInventoryComponent characterInventoryComponent,
+            IAtomicObservable fireAction,
+            ICoroutineRunner coroutineRunner)
         {
+            _characterInventoryComponent = characterInventoryComponent;
             _pickupEvent = pickupEvent;
-            WeaponChangeAction.Compose(weaponOwner, weaponParent, _currentWeapon);
+            
+            _weaponChangeAction.Compose(weaponOwner, weaponParent, _currentWeapon, targetCaptureMechanics);
+            
+            _reloadingMechanics.Compose(
+                _currentWeapon, fireAction, pickupEvent, _characterInventoryComponent.AmmoInventory, coroutineRunner);
         }
         
         public void OnEnable()
         {
-            _pickupEvent.Subscribe(WeaponChangeAction.TryToTakePickup);
-            WeaponChangeAction.OnEnable();
+            _pickupEvent.Subscribe(_weaponChangeAction.TryToTakePickup);
+            _weaponChangeAction.OnEnable();
+            _reloadingMechanics.OnEnable();
         }
         
         public void OnDisable()
         {
-            _pickupEvent.Unsubscribe(WeaponChangeAction.TryToTakePickup);
-            WeaponChangeAction.OnDisable();
+            _pickupEvent.Unsubscribe(_weaponChangeAction.TryToTakePickup);
+            _weaponChangeAction.OnDisable();
+            _reloadingMechanics.OnDisable();
         }
 
         public void Dispose()
         {
             _currentWeapon?.Dispose();
-            WeaponChangeAction?.Dispose();
+            _weaponChangeAction?.Dispose();
         }
     }
 }

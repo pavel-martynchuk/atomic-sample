@@ -1,4 +1,5 @@
 ﻿using System;
+using Atomic.Elements;
 using Atomic.Objects;
 using Game.Scripts.Infrastructure.Services.Coroutines;
 using GameEngine;
@@ -13,51 +14,45 @@ namespace Game.Scripts.Gameplay.Character
     {
         [SerializeField, Required] private Rigidbody _rigidbody;
         [SerializeField, Required] private Animator _animator;
-        [SerializeField, Required] private Transform _firePoint;
-        [SerializeField, Required] private AtomicObject _bullet;
         [SerializeField, Required] private Transform _weaponParent;
-        
+        [SerializeField, Required] private OrbitAroundParent _orbitAroundParent;
+
         [SerializeField, Required] private Rigidbody[] _rigidbodies;
-        
-        [Section]
-        [BoxGroup("Health Component")]
+
+        [Section] [BoxGroup("Health Component")]
         public HealthComponent HealthComponent;
-        
-        [Section]
-        [BoxGroup("Movement Component")]
+
+        [Section] [BoxGroup("Movement Component")]
         public PhysicalMovementComponent MovementComponent;
-        
-        [Section]
-        [BoxGroup("Rotation Component")]
+
+        [Section] [BoxGroup("Rotation Component")]
         public PhysicalRotationComponent RotationComponent;
-        
-        [Section]
-        [BoxGroup("Fire Component")]
+
+        [Section] [BoxGroup("Fire Component")]
         public FireComponent FireComponent;
-        
-        [Section]
-        [Get(ObjectAPI.AccelerateMechanics)]
-        [BoxGroup("Accelerate")] 
+
+        [Section] [Get(ObjectAPI.AccelerateMechanics)] [BoxGroup("Accelerate")]
         public AccelerateMechanics AccelerateMechanics;
 
-        [Section]
-        [Get(ObjectAPI.DashAction)]
-        [BoxGroup("Dash action")] 
+        [Section] [Get(ObjectAPI.DashAction)] [BoxGroup("Dash action")]
         public DashAction DashAction;
-        
-        [Section]
-        [Get(ObjectAPI.PickupMechanics)]
-        [BoxGroup("Pickup")] 
+
+        [Section] [Get(ObjectAPI.PickupMechanics)] [BoxGroup("Pickup")]
         public PickupMechanics PickupMechanics;
-        
-        [BoxGroup("Ragdoll")]
-        public Ragdoll Ragdoll;
-        
+
+        [BoxGroup("Ragdoll")] public RagdollComponent RagdollComponent;
+
         [BoxGroup("CharacterWeaponComponent")]
         public CharacterWeaponComponent CharacterWeaponComponent;
-        
+
+        [BoxGroup("TargetCaptureMechanics")]
+        public TargetCaptureMechanics TargetCaptureMechanics;
+
+        [BoxGroup("CharacterInventoryComponent")]
+        public CharacterInventoryComponent CharacterInventoryComponent;
+
         private UpdateMechanics _stateController;
-        
+
         public void Compose(ICoroutineRunner coroutineRunner, Character_Data data)
         {
             HealthComponent.Compose(data.Health);
@@ -66,11 +61,22 @@ namespace Game.Scripts.Gameplay.Character
             AccelerateMechanics.Compose(data.MovementSpeed, data.AcceleratedSpeed);
             DashAction.Compose(coroutineRunner, _rigidbody, data.DashDistance, data.DashDuration);
             PickupMechanics.Compose();
-            Ragdoll.Compose(_animator, _rigidbodies);
-            CharacterWeaponComponent.Compose(_rigidbody.transform, _weaponParent, PickupMechanics.PickingUpCompleteEvent);
-            
+            RagdollComponent.Compose();
             FireComponent.Compose(CharacterWeaponComponent.CurrentWeapon);
+            
+            TargetCaptureMechanics.Compose(new AtomicFunction<bool>(() => CharacterWeaponComponent.CurrentWeapon.Value != null));
+            
+            CharacterWeaponComponent.Compose(
+                _rigidbody.transform,
+                _weaponParent,
+                PickupMechanics.PickingUpCompleteEvent,
+                TargetCaptureMechanics,
+                CharacterInventoryComponent,
+                FireComponent.FireAction,
+                coroutineRunner);
 
+
+            _orbitAroundParent.Compose(TargetCaptureMechanics.CurrentTarget);
 
             _stateController = new UpdateMechanics(StateResolve);
         }
@@ -79,38 +85,38 @@ namespace Game.Scripts.Gameplay.Character
         {
             HealthComponent.OnEnable();
             CharacterWeaponComponent.OnEnable();
-        }
-
-        public void OnUpdate()
-        {
-            FireComponent.OnUpdate();
-            PickupMechanics.OnUpdate();
-            _stateController.OnUpdate(Time.deltaTime);
-        }
-
-        public void OnFixedUpdate()
-        {
-            MovementComponent.FixedUpdate(); 
-            RotationComponent.OnFixedUpdate(); 
+            PickupMechanics.OnEnable();
+            TargetCaptureMechanics.OnEnable();
         }
 
         public void OnDisable()
         {
             HealthComponent.OnDisable();
             CharacterWeaponComponent.OnDisable();
+            PickupMechanics.OnDisable();
+            TargetCaptureMechanics.OnDisable();
         }
 
-        public void OnTriggerEnter(Collider collider) => 
-            PickupMechanics.OnTriggerEnter(collider);
+        public void OnUpdate()
+        {
+            FireComponent.OnUpdate();
+            PickupMechanics.OnUpdate();
+            TargetCaptureMechanics.OnUpdate();
 
-        public void OnTriggerExit(Collider collider) => 
-            PickupMechanics.OnTriggerExit(collider);
+            _stateController.OnUpdate(Time.deltaTime);
+        }
+
+        public void OnFixedUpdate()
+        {
+            MovementComponent.FixedUpdate();
+            RotationComponent.OnFixedUpdate();
+        }
 
         private void StateResolve()
         {
             bool isAlive = HealthComponent.IsAlive.Value;
-            bool isRagdoll = Ragdoll.IsActive.Value;
-            
+            bool isRagdoll = RagdollComponent.IsActive.Value;
+
             DashAction.DashEnable.Value = isAlive && !isRagdoll && !DashAction.InProcess.Value;
             MovementComponent.MoveEnable.Value = isAlive && !isRagdoll;
             RotationComponent.RotateEnable.Value = isAlive && !isRagdoll && !DashAction.InProcess.Value;
@@ -123,7 +129,7 @@ namespace Game.Scripts.Gameplay.Character
             FireComponent?.Dispose();
             DashAction?.Dispose();
             PickupMechanics?.Dispose();
-            Ragdoll?.Dispose();
+            RagdollComponent?.Dispose();
             CharacterWeaponComponent?.Dispose();
         }
     }

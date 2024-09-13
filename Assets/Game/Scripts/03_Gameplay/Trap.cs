@@ -1,4 +1,4 @@
-﻿using Atomic.Elements;
+﻿using System.Collections.Generic;
 using Atomic.Objects;
 using GameEngine;
 using Sirenix.OdinInspector;
@@ -6,38 +6,66 @@ using UnityEngine;
 
 namespace Game.Scripts.Gameplay
 {
-    public class Trap : MonoBehaviour
+    public class Trap : AtomicObject
     {
+        [SerializeField]
+        protected List<ActivateConditions> ActivateConditions;
+        
         [SerializeField, Required]
-        private TriggerObserver _triggerObserver;
+        protected TriggerObserver TriggerObserver;
         
         [SerializeField]
-        private DealDamageAction _damageAction = new();  
+        protected Animation Animation;
         
-        [SerializeField]
-        private int _damage = 3;
+        protected void OnEnable()
+        {
+            TriggerObserver.TriggerEnter += OnTriggerEnter;
+        }
+
+        protected void OnDisable()
+        {
+            TriggerObserver.TriggerEnter -= OnTriggerEnter;
+        }
         
-        private void Awake()
+        protected virtual void OnTriggerEnter(Collider other)
         {
-            _damageAction.Compose(new AtomicValue<int>(_damage));
+            foreach (ActivateConditions condition in ActivateConditions)
+            {
+                if (condition == Gameplay.ActivateConditions.Trigger)
+                {
+                    Activate(other);
+                }
+            }
         }
 
-        private void OnEnable()
+        protected virtual void Activate(Collider target)
         {
-            _triggerObserver.TriggerEnter += DoDamage;
-        }
-
-        private void OnDisable()
-        {
-            _triggerObserver.TriggerEnter -= DoDamage;
-        }
-
-        private void DoDamage(Collider obj)
-        {
-            AtomicObject atomicObject = obj.GetComponentInParent<AtomicObject>();
+           
+            AtomicObject atomicObject = target.GetComponentInParent<AtomicObject>();
+            if (atomicObject) 
+                ApplyEffects(atomicObject);
             
-            if (atomicObject != null)  
-                _damageAction.Invoke(atomicObject);
+            CheckAnim();
         }
+
+        private void CheckAnim()
+        {
+            if (Animation != null)
+            {
+                Animation.Play();
+            }
+        }
+
+        protected virtual void OnTriggerExit(Collider other) { }
+        
+        protected virtual void ApplyEffects(AtomicObject atomicObject) { }
+    }
+    
+    public enum ActivateConditions
+    {
+        Trigger = 0,
+        Processing = 1,
+        Projectile = 2,
+        Explosion = 3,
     }
 }

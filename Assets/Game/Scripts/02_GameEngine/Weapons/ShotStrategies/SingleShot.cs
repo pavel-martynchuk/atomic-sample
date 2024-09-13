@@ -16,6 +16,7 @@ namespace GameEngine
             GameObject projectileInstance = Object.Instantiate(Projectile, FirePoint.position, FirePoint.rotation);
             projectileInstance.transform.forward = FirePoint.forward;
             ProjectileInstances.Add(projectileInstance);
+            OnShot.Invoke();
         }
 
         public override void Move()

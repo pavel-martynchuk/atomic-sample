@@ -47,7 +47,7 @@ namespace GameEngine.Data
         [SerializeField, ReadOnly, PropertyOrder(1)]
         private List<float> multiplicativeModifiers = new();
 
-        public Stat(float value)
+        public void Compose(float value)
         {
             base.Value = value;
         }

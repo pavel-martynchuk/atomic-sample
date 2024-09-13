@@ -24,8 +24,7 @@ namespace GameEngine
         {
             _currentWeapon = currentWeapon;
             _fireCondition.Append(FireEnable);
-            //_fireCondition.Append(_currentWeapon.Value != null);
-            //_fireCondition.Append(_currentWeapon.Value); // ammo have
+            _fireCondition.Append(new AtomicFunction<bool>(() => _currentWeapon.Value != null));
             FireAction.Compose(_fireCondition, _currentWeapon);
         }
 

@@ -6,6 +6,7 @@ namespace GameEngine
     {
         [Header("Character")]
         public const string MoveDirection = nameof(MoveDirection);
+        public const string SpeedStat = nameof(SpeedStat);
         public const string RotateDirection = nameof(RotateDirection);
         public const string DashAction = nameof(DashAction);
         public const string FireAction = nameof(FireAction);
