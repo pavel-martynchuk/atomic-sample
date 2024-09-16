@@ -23,6 +23,21 @@ namespace GameEngine.Effects
                 case ContinuousPermanentApplication strategy:
                     StartCoroutine(DecelerateOnTime(speed, strategy.Duration));
                     break;
+                case SingleApplication:
+                    speed.AddMultiplicativeModifier(_decelerationFactor);
+                    break;
+            }
+        }
+
+        public override void RemoveEffect(AtomicObject atomicObject)
+        {  
+            Stat speed = atomicObject.Get<Stat>(ObjectAPI.SpeedStat);
+            
+            switch (ApplicationStrategy)
+            {
+                case SingleApplication:
+                    speed.RemoveMultiplicativeModifier(_decelerationFactor);
+                    break;
             }
         }
 

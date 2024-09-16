@@ -1304,7 +1304,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c5d56189694b40aa7fce8eb436f590, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ActivateConditions: 00000000
+  Conditions: 00000000
+  _stayInterval: 1
+  IsRemoveOnExit: 0
   TriggerObserver: {fileID: 4811969736338856224}
   Animation: {fileID: 6440225142303922920}
   _damageEffect: {fileID: 2094068432208713554}

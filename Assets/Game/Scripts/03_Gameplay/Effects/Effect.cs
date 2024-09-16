@@ -15,5 +15,6 @@ namespace GameEngine.Effects
         public EffectApplicationStrategy ApplicationStrategy;
 
         public abstract void ApplyEffect(AtomicObject atomicObject);
+        public virtual void RemoveEffect(AtomicObject atomicObject) {}
     }
 }

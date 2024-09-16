@@ -677,7 +677,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Getting Up From Spine
-  m_Speed: 1.5
+  m_Speed: 3
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6022155080292839993}
@@ -756,7 +756,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Getting Up From Belly
-  m_Speed: 1.5
+  m_Speed: 3
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -997313596340806292}
